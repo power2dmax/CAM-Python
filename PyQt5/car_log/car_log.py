@@ -23,7 +23,7 @@ class MainWindow(qtw.QMainWindow):
         self.setWindowTitle("My Car Log App")
         self.setMinimumSize(qtc.QSize(500, 600))
 
-        self.createConnection()
+        #self.createConnection()
         self.createMenu()
 
         self.car_log_tracker()
