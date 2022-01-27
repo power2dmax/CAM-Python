@@ -11,6 +11,7 @@ import sys, csv
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
+from PyQt5 import QtSql as qts
 
 class MainWindow(qtw.QMainWindow):
     """
@@ -22,9 +23,26 @@ class MainWindow(qtw.QMainWindow):
         self.setWindowTitle("My Car Log App")
         self.setMinimumSize(qtc.QSize(500, 600))
 
+        self.createConnection()
         self.createMenu()
-        self.createToolBar()
+
         self.car_log_tracker()
+        
+    def createConnection(self):
+        database = qts.QSqlDatabase.addDatabase("QSQLITE")
+        database.setDatabaseName("files/car_log.db")
+    
+        if not database.open():
+            print ("Unable to open data source file")
+            sys.exit(1) # Error code 1 - signifies error
+            
+        # Check if the tables we need exist in the database
+        tables_needed = {'maintenance'}
+        tables_not_found = tables_needed - set(database.tables())
+        if tables_not_found:
+            qtw.QMessageBox.critical(None, 'Error',
+                f'The following tables are missing from the database:{tables_not_found}')
+            sys.exit(1) # Error code 1 - signifies error
         
     def createMenu(self):
         # Create the actions for the "File" menu
@@ -66,25 +84,48 @@ class MainWindow(qtw.QMainWindow):
         help_menu = menu_bar.addMenu('Help')
         help_menu.addAction(about_action)
         
-    def createToolBar(self):
-        """
-        Create toolbar for the GUI
-        """
-        # Set up the toolbar
-        tool_bar = qtw.QToolBar("Main ToolBar")
-        self.addToolBar(qtc.Qt.BottomToolBarArea, tool_bar)
-        
-        # Add actrions to the toolbar
-        #tool_bar.addAction(self.add_action)
-        #tool_bar.addSeparator()
-        #tool_bar.addAction(self.del_action)
-        #tool_bar.addSeparator()
-        tool_bar.addAction(self.exit_action)
-        
+       
     def car_log_tracker(self):
         """
-        Set up the standard item model and table view
+        Create instances of widgets, the table view and set layouts
         """
+        icons_path = "images/icons"
+        
+        title = qtw.QLabel("Car Maintenance Log")
+        title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
+        title.setStyleSheet("font: bold 24px")
+        
+        add_record_button = qtw.QPushButton("Add Maintenance")
+        #add_record_button.setIcon(qtw.QIcon(os.path.join(icons_path, "add_user.png")))
+        add_record_button.setStyleSheet("padding: 10px")
+        #add_record_button.clicked.connect(self.addRecord)
+        
+        del_record_button = qtw.QPushButton("Delete")
+        #del_record_button.setIcon(qtw.QIcon(os.path.join(icons_path, "del_user.png")))
+        del_record_button.setStyleSheet("padding: 10px")
+        #del_record_button.clicked.connect(self.deleteRecord)
+        
+        exit_button = qtw.QPushButton('Exit', self)
+        exit_button.setStyleSheet("padding: 10px")
+        exit_button.clicked.connect(self.close) 
+        
+        # Set up the sorting combo box
+        sorting_options = ["Date", "Mileage", "Action"]
+        sort_name_cb = qtw.QComboBox()
+        sort_name_cb.addItems(sorting_options)
+        #sort_name_cb.currentTextChanged.connect(self.setSortingOrder)
+        
+        buttons_h_box = qtw.QHBoxLayout()
+        buttons_h_box.addWidget(add_record_button)
+        buttons_h_box.addWidget(del_record_button)
+        buttons_h_box.addWidget(exit_button)
+        buttons_h_box.addStretch()
+        buttons_h_box.addWidget(sort_name_cb)
+        
+        # Widget to contain editing buttons
+        edit_buttons = qtw.QWidget()
+        edit_buttons.setLayout(buttons_h_box)
+        
         self.model = qtg.QStandardItemModel()
         
         self.table_view = qtw.QTableView()
@@ -96,7 +137,16 @@ class MainWindow(qtw.QMainWindow):
         
         self.loadCSVFile()
         
-        self.setCentralWidget(self.table_view)
+               
+        # Main Layout
+        main_v_box = qtw.QVBoxLayout()
+        main_v_box.addWidget(title, qtc.Qt.AlignLeft)
+        main_v_box.addWidget(edit_buttons)
+        main_v_box.addWidget(self.table_view)       
+        widget = qtw.QWidget()
+        widget.setLayout(main_v_box)
+        self.setCentralWidget(widget)
+        
         
     def add_entry(self):
         pass
