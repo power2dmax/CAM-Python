@@ -1,9 +1,9 @@
 # car_log.py
 """
 Program written in Python is used to track vehicle maintenance.
-This program uses PyQt5 for the UI and .csv as a flat file 
-data storage. The user will enter the date, millage, and the
-maintence performed.
+This program uses PyQt5 for the UI and SQLite.
+The user can enter the date, millage, and the maintence performed.
+The user will also be able to delete a row
 """
 
 import sys, csv
