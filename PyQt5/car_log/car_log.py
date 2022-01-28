@@ -23,7 +23,7 @@ class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle("My Car Log App")
+        self.setWindowTitle("Car Log App")
         self.setMinimumSize(qtc.QSize(550, 675))
 
         self.createMenu()
@@ -147,14 +147,12 @@ class MainWindow(qtw.QMainWindow):
         self.setCentralWidget(widget)
         
     def addRow(self):
-       item = qtg.QStandardItem("")
-       self.model.appendRow(item)
+        item = qtg.QStandardItem("")
+        self.model.appendRow(item)
     
     def removeRow(self):
-       indices = self.table_view.selectionModel().selectedRows() 
-       for index in sorted(indices):
-           model.removeRow(index.row())
-           
+        pass
+
     def save_file(self):
         pass
     
@@ -172,10 +170,10 @@ class MainWindow(qtw.QMainWindow):
         if message == qtw.QMessageBox.No:
             self.close()
             sys.exit()
-        else:
+        """else:
             #save_file()
             self.close()
-            sys.exit()
+            sys.exit()"""
 
     def loadCSVFile(self):
         """
