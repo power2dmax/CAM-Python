@@ -34,11 +34,13 @@ class MainWindow(qtw.QMainWindow):
         #save_action
         save_action = qtw.QAction('Save', self)
         save_action.setShortcut('Ctrl+S')
+        save_action.setIcon(qtg.QIcon("icons/save.png"))
         #exit_action.triggered.connect(self.close)
         
         self.exit_action = qtw.QAction('Exit', self)
         self.exit_action.setShortcut('Ctrl+Q')
-        self.exit_action.triggered.connect(self.close)
+        self.exit_action.setIcon(qtg.QIcon("icons/exit.png"))
+        self.exit_action.triggered.connect(self.exit_message)
         
         # Create the actions for the "Edit Menu"
         self.add_action = qtw.QAction('Add Row', self)
@@ -91,13 +93,14 @@ class MainWindow(qtw.QMainWindow):
         del_record_button.clicked.connect(self.removeRow)
         
         save_button = qtw.QPushButton("Save")
-        #del_record_button.setIcon(qtw.QIcon(os.path.join(icons_path, "del_user.png")))
+        save_button.setIcon(qtg.QIcon("icons/save.png"))
         save_button.setStyleSheet("padding: 10px")
         save_button.clicked.connect(self.save_file)
         
         exit_button = qtw.QPushButton('Exit', self)
+        exit_button.setIcon(qtg.QIcon("icons/exit.png"))
         exit_button.setStyleSheet("padding: 10px")
-        exit_button.clicked.connect(self.close) 
+        exit_button.clicked.connect(self.exit_message) 
         
         # Set up the sorting combo box
         sorting_text = qtw.QLabel('Sorting Options: ')
@@ -157,11 +160,23 @@ class MainWindow(qtw.QMainWindow):
     
     def about_info(self):
         text_1 = "CAM's car log, written in Python \n"
-        text_2 = "using PyQt5 modules for the GUI \n"
+        text_2 = "using PyQt5 modules for the GUI \n\n"
         text_3 = "Originally written: 1/27/22"
         
         qtw.QMessageBox.about(self, "CAM's Car Log", text_1 + text_2 + text_3)
     
+    def exit_message(self):
+        message = qtw.QMessageBox.question(self, 'Exit',
+            'Do you want to save before exiting?',
+            qtw.QMessageBox.Yes | qtw.QMessageBox.No)
+        if message == qtw.QMessageBox.No:
+            self.close()
+            sys.exit()
+        else:
+            #save_file()
+            self.close()
+            sys.exit()
+
     def loadCSVFile(self):
         """
         Load the headers and rows from the car_log csv file
