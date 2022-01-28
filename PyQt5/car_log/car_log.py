@@ -54,7 +54,7 @@ class MainWindow(qtw.QMainWindow):
         # Create actions for the "Help Menu" menu
         about_action = qtw.QAction('About', self)
         about_action.setIcon(qtg.QIcon("icons/about.png"))
-        #about_action.triggered.connect(self.close)
+        about_action.triggered.connect(self.about_info)
         
         # Create the menubar
         menu_bar = self.menuBar()
@@ -154,6 +154,13 @@ class MainWindow(qtw.QMainWindow):
            
     def save_file(self):
         pass
+    
+    def about_info(self):
+        text_1 = "CAM's car log, written in Python \n"
+        text_2 = "using PyQt5 modules for the GUI \n"
+        text_3 = "Originally written: 1/27/22"
+        
+        qtw.QMessageBox.about(self, "CAM's Car Log", text_1 + text_2 + text_3)
     
     def loadCSVFile(self):
         """
