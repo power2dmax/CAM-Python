@@ -32,10 +32,10 @@ class MainWindow(qtw.QMainWindow):
     def createMenu(self):
         # Create the actions for the "File" menu
         #save_action
-        save_action = qtw.QAction('Save', self)
-        save_action.setShortcut('Ctrl+S')
-        save_action.setIcon(qtg.QIcon("icons/save.png"))
-        #exit_action.triggered.connect(self.close)
+        self.save_action = qtw.QAction('Save', self)
+        self.save_action.setShortcut('Ctrl+S')
+        self.save_action.setIcon(qtg.QIcon("icons/save.png"))
+        self.save_action.triggered.connect(self.save_file)
         
         self.exit_action = qtw.QAction('Exit', self)
         self.exit_action.setShortcut('Ctrl+Q')
@@ -64,7 +64,7 @@ class MainWindow(qtw.QMainWindow):
         
         # Create the "File" menu and add the buttons/actions
         file_menu = menu_bar.addMenu('File')
-        file_menu.addAction(save_action)
+        file_menu.addAction(self.save_action)
         file_menu.addAction(self.exit_action)
         
         edit_menu = menu_bar.addMenu('Edit')
@@ -102,23 +102,13 @@ class MainWindow(qtw.QMainWindow):
         exit_button.setStyleSheet("padding: 10px")
         exit_button.clicked.connect(self.exit_message) 
         
-        # Set up the sorting combo box
-        sorting_text = qtw.QLabel('Sorting Options: ')
-        sorting_options = ["Date", "Mileage", "Maintenance"]
-        sort_name_cb = qtw.QComboBox()
-        sort_name_cb.addItems(sorting_options)
-        #sort_name_cb.currentTextChanged.connect(self.setSortingOrder)
-        
         buttons_h_box = qtw.QHBoxLayout()
         buttons_h_box.addWidget(add_record_button)
         buttons_h_box.addWidget(del_record_button)
-        buttons_h_box.addWidget(sorting_text)
-        buttons_h_box.addWidget(sort_name_cb)
         buttons_h_box.addStretch()
         buttons_h_box.addWidget(save_button)
         buttons_h_box.addWidget(exit_button)
-        
-        
+                
         # Widget to contain editing buttons
         edit_buttons = qtw.QWidget()
         edit_buttons.setLayout(buttons_h_box)
@@ -151,7 +141,8 @@ class MainWindow(qtw.QMainWindow):
         self.model.appendRow(item)
     
     def removeRow(self):
-        pass
+        item = qtg.QStandardItem()
+        self.model.appendRow(item -1)
 
     def save_file(self):
         pass
@@ -170,10 +161,9 @@ class MainWindow(qtw.QMainWindow):
         if message == qtw.QMessageBox.No:
             self.close()
             sys.exit()
-        """else:
-            #save_file()
+        else:
+            self.save_file()
             self.close()
-            sys.exit()"""
 
     def loadCSVFile(self):
         """
