@@ -26,10 +26,10 @@ class MainWindow(qtw.QMainWindow):
         self.setWindowTitle("Car Log App")
         self.setMinimumSize(qtc.QSize(550, 675))
 
-        self.createMenu()
-        self.car_log_tracker()
-        
-    def createMenu(self):
+        self.initializeUI()
+        self.loadCSVFile() # Load the cvs file up for display and editing
+                       
+    def initializeUI(self):
         # Create the actions for the "File" menu
         #save_action
         self.save_action = qtw.QAction('Save', self)
@@ -74,10 +74,6 @@ class MainWindow(qtw.QMainWindow):
         help_menu = menu_bar.addMenu('Help')
         help_menu.addAction(about_action)
        
-    def car_log_tracker(self):
-        """
-        Create instances of widgets, the table view and set layouts
-        """
         title = qtw.QLabel("Car Maintenance Log")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
@@ -120,13 +116,7 @@ class MainWindow(qtw.QMainWindow):
         self.header = self.table_view.horizontalHeader()
         self.header.setStretchLastSection(True)
         self.table_view.setModel(self.model)
-        
-        #self.model.setRowCount(9)
-        #self.model.setColumnCount(2)
-        
-        # Load the cvs file up for display and editing
-        self.loadCSVFile()
-               
+                       
         # Main Layout
         main_v_box = qtw.QVBoxLayout()
         main_v_box.addWidget(title, qtc.Qt.AlignLeft)
