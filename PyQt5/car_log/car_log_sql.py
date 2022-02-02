@@ -2,7 +2,8 @@
 import sys, os
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel,
     QPushButton, QComboBox, QTableView, QHeaderView,
-    QHBoxLayout, QVBoxLayout, QSizePolicy, QMessageBox)
+    QHBoxLayout, QVBoxLayout, QSizePolicy, QMessageBox,
+    QAction)
 from PyQt5.QtSql import (QSqlDatabase, QSqlQuery,
     QSqlRelationalTableModel, QSqlRelation,
     QSqlRelationalDelegate)
@@ -19,7 +20,7 @@ class AccountManager(QWidget):
         """
         Initialize the window and display its contents to the screen.
         """
-        self.setMinimumSize(1000, 600)
+        self.setMinimumSize(550, 600)
         self.setWindowTitle('Car Log GUI')
 
         self.createConnection()
@@ -61,21 +62,24 @@ class AccountManager(QWidget):
         """
         Create instances of widgets, the table view and set layouts.
         """
-        icons_path = "icons"
-
         title = QLabel("Car Maintenance Log")
         title.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
 
         add_record_button = QPushButton("Add Maintenance")
-        #add_record_button.setIcon(QIcon(os.path.join(icons_path, "add_user.png")))
+        add_record_button.setIcon(QIcon("icons/add_row.png"))
         add_record_button.setStyleSheet("padding: 10px")
         add_record_button.clicked.connect(self.addRecord)
 
         del_record_button = QPushButton("Delete Record")
-        #del_record_button.setIcon(QIcon(os.path.join(icons_path, "trash_can.png")))
+        del_record_button.setIcon(QIcon("icons/del_row.png"))
         del_record_button.setStyleSheet("padding: 10px")
         del_record_button.clicked.connect(self.deleteRecord)
+        
+        exit_button = QPushButton('Exit')
+        exit_button.setIcon(QIcon("icons/exit.png"))
+        exit_button.setStyleSheet("padding: 10px")
+        exit_button.clicked.connect(self.exit_message)
 
         # Set up sorting combo box
         sorting_options = ["Sort by ID", "Sort by Date", "Sort by Mileage","Sort by Item"]
@@ -88,6 +92,8 @@ class AccountManager(QWidget):
         buttons_h_box.addWidget(del_record_button)
         buttons_h_box.addStretch()
         buttons_h_box.addWidget(sort_name_cb)
+        buttons_h_box.addStretch()
+        buttons_h_box.addWidget(exit_button)
 
         # Widget to contain editing buttons
         edit_buttons = QWidget()
@@ -95,9 +101,10 @@ class AccountManager(QWidget):
 
         # Create table view and set model
         self.table_view = QTableView()
+        self.header = self.table_view.horizontalHeader()
+        
         self.table_view.setModel(self.model)
-        self.table_view.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.table_view.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.header.setStretchLastSection(True)
         self.table_view.setSelectionMode(QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(QTableView.SelectRows)
 
@@ -149,7 +156,14 @@ class AccountManager(QWidget):
             self.model.setSort(self.model.fieldIndex('Item'), Qt.AscendingOrder)
         
         self.model.select()
-
+        
+    def exit_message(self):
+        message = QMessageBox.question(self, 'Exit',
+            'This will save upon exit. \n Are you sure you want exit?',
+            QMessageBox.Yes | QMessageBox.No)
+        if message == QMessageBox.Yes:
+            self.close()
+            
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = AccountManager()
