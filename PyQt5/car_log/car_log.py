@@ -14,7 +14,7 @@ from PyQt5 import QtGui as qtg
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtSql as qts
 
-
+file_name = "files/car_log.csv"
 
 class MainWindow(qtw.QMainWindow):
     """
@@ -160,8 +160,6 @@ class MainWindow(qtw.QMainWindow):
         Load the headers and rows from the car_log csv file
         Items will be constructed before asdding them to the table
         """
-        file_name = "files/car_log.csv"
-        
         with open(file_name, "r") as csv_f:
             reader = csv.reader(csv_f)
             header_labels = next(reader)
