@@ -21,6 +21,8 @@ class CarMaintenanceLog(qtw.QMainWindow):
 
     def __init__(self):
         super().__init__()
+        
+        
         self.initializeUI()
 
     def initializeUI(self):
@@ -69,7 +71,21 @@ class CarMaintenanceLog(qtw.QMainWindow):
         """
         Create instances of widgets, the table view and set layouts.
         """
-                
+        
+        stylesheet = """
+        QMainWindow {
+            background-color: steelblue;
+        }
+        QPushButton {
+            font-size: 10pt;
+        }
+        QTableView {
+            background-color: aliceblue;
+        }
+        
+        """
+        self.setStyleSheet(stylesheet)
+        
         # Create the status bar
         self.statusBar().showMessage('Welcome to Car Maintenance Log')
         
