@@ -74,7 +74,7 @@ class CarMaintenanceLog(qtw.QMainWindow):
         
         stylesheet = """
         QMainWindow {
-            background-color: steelblue;
+            background-color: lightblue;
         }
         QPushButton {
             font-size: 10pt;
@@ -237,5 +237,7 @@ class CarMaintenanceLog(qtw.QMainWindow):
             
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
+    windows_style = qtw.QStyleFactory.create('Windows')
+    app.setStyle(windows_style)
     window = CarMaintenanceLog()
     sys.exit(app.exec_())
