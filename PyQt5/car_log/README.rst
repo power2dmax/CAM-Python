@@ -11,7 +11,8 @@ CAM
 About:
 ==========
 Simple UI program written in Python and PyQt5 and uses SQLite for the database. 
-The purpose id to create an application to track car maintenance performed.
+The purpose is to create an application to track car maintenance performed while
+showing Python programing skills
 
 Several files support the car_maintenance_log program
 
