@@ -46,4 +46,4 @@ None
 
 Screen Shot:
 ============
-.. image:: files/screenshot.png
+.. image:: screenshot.png
