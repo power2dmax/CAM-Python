@@ -39,3 +39,7 @@ Simply run the program. The car maintenance program has the following features:
 Notes:
 ==========
 None
+
+Screen Shot:
+============
+image:: files/screenshot.png
