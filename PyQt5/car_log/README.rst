@@ -42,4 +42,4 @@ None
 
 Screen Shot:
 ============
-image:: files/screenshot.png
+..image:: files/screenshot.png
