@@ -69,6 +69,9 @@ class CarMaintenanceLog(qtw.QMainWindow):
         """
         Create instances of widgets, the table view and set layouts.
         """
+                
+        # Create the status bar
+        self.statusBar().showMessage('Welcome to Car Maintenance Log')
         
         # Create the actions for the "Files Menu"
         self.exit_action = qtw.QAction('Exit', self)

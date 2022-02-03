@@ -25,10 +25,14 @@ Several files support the car_maintenance_log program
 
 Usage:
 ==========
-Simply run the program
-- Add 
-- Delete
-- Saves on exit
+Simply run the program. The car maintenance program has the following features:
+
+- Menu - (PyQt5 menuBar) Dropdown menus with "File", "Menu", and "Help"
+- Add Row - (PyQt5 QPushButton) Allows the user to add a row that can be populated
+- Delete Row - (PyQt5 QPushButton) Allows the user to delete any row
+- Sorting Options - (PyQt5 QComboBox) Aloows the user to sort by "Date", "Mileage", or "Item"
+- Exit - (PyQt5 QPushButton)Prompts the user if they want to exit or not, if "Yes" db table will be saved
+- Message Bar - (PyQt5 statusBar) Message welcoming the user to the Car Maintenance Log program
 
 
 Notes:
