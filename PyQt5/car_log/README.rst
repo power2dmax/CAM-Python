@@ -26,7 +26,11 @@ Several files support the car_maintenance_log program
 
 Usage:
 ==========
-Simply run the program. The car maintenance program has the following features:
+Simply run the program. 
+
+Development:
+===========
+The car maintenance program has the following features:
 
 - Menu - (PyQt5 menuBar) Dropdown menus with "File", "Menu", and "Help"
 - Add Row - (PyQt5 QPushButton) Allows the user to add a row that can be populated
@@ -42,4 +46,4 @@ None
 
 Screen Shot:
 ============
-.. image:: ..files/screenshot.png
+.. image:: files/screenshot.png
