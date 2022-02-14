@@ -1,5 +1,12 @@
 # car_maintenance_log_2
 """
+1-27-22
+Program written in Python is used to track vehicle maintenance.
+This program uses PyQt5 for the UI and SQLite for the data.
+The user can enter the date, millage, and the maintenance performed.
+The user will also have the capability to delete a row
+
+2-14-22
 New and improved version of the original car maintenance log.
 Enhancements includes the ability to not only track maintenance
 but to also track gas. Additional updates includes the ability
@@ -176,7 +183,7 @@ class Maintenance(qtw.QWidget):
         self.createConnection()
         self.createTable()
         
-        self.layout = qtw.QVBoxLayout(self)
+        layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
         
         self.add_row = qtw.QPushButton("Add Row")
@@ -205,7 +212,7 @@ class Maintenance(qtw.QWidget):
         self.setLayout(top_layout)
         
         # Setting up the user actions for the car log tracker 
-        title = qtw.QLabel("Car Maintenance Log")
+        title = qtw.QLabel("Maintenance Log")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
         
@@ -217,13 +224,13 @@ class Maintenance(qtw.QWidget):
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
-        self.layout.addLayout(top_layout)
-        self.layout.addWidget(title, qtc.Qt.AlignLeft)
-        self.layout.addWidget(self.table_view)
+        layout.addLayout(top_layout)
+        layout.addWidget(title, qtc.Qt.AlignLeft)
+        layout.addWidget(self.table_view)
     
     def createConnection(self):
         self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-        self.database.setDatabaseName("files/maintenance.db")
+        self.database.setDatabaseName("files/car_log.db")
 
         if not self.database.open():
             print("Unable to open data source file.")
@@ -294,7 +301,7 @@ class Gas(qtw.QWidget):
         self.createConnection()
         self.createTable()
         
-        self.layout = qtw.QVBoxLayout(self)
+        layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
         
         self.add_row = qtw.QPushButton("Add Row")
@@ -308,14 +315,21 @@ class Gas(qtw.QWidget):
         self.del_row.clicked.connect(self.deleteRow)
         
         # Setting up the user actions for the car log tracker 
-        title = qtw.QLabel("Car Gas Log")
+        title = qtw.QLabel("Gas Log")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
+        
+        avgMpgText = qtw.QLabel("Average MPG is:")
+        avgMpgCalc = qtw.QLabel("32 MPG")
         
         top_layout.addWidget(self.add_row)
         top_layout.addWidget(self.del_row)
         top_layout.addStretch()
-        self.setLayout(top_layout)
+        top_layout.addWidget(avgMpgText)
+        top_layout.addWidget(avgMpgCalc)
+        top_layout.addStretch()
+        
+        #self.setLayout(top_layout)
         
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -325,9 +339,10 @@ class Gas(qtw.QWidget):
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
-        self.layout.addLayout(top_layout)
-        self.layout.addWidget(title, qtc.Qt.AlignLeft)
-        self.layout.addWidget(self.table_view)
+        layout.addLayout(top_layout)
+        layout.addWidget(title, qtc.Qt.AlignLeft)
+        layout.addWidget(self.table_view)
+        #self.layout.addWidget(bottom_layout)
         
     def createTable(self):
         """
@@ -337,16 +352,16 @@ class Gas(qtw.QWidget):
         self.model.setTable('gas')
         self.model.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
         self.model.setHeaderData(self.model.fieldIndex('Date'), qtc.Qt.Horizontal, "Date")
-        self.model.setHeaderData(self.model.fieldIndex('Odometer_Reading'), qtc.Qt.Horizontal, "Odometer Reading")
         self.model.setHeaderData(self.model.fieldIndex('Gallons'), qtc.Qt.Horizontal, "Gallons")
         self.model.setHeaderData(self.model.fieldIndex('Cost'), qtc.Qt.Horizontal, "Cost")
+        self.model.setHeaderData(self.model.fieldIndex('Odometer_Reading'), qtc.Qt.Horizontal, "Odometer Reading")
                 
         # Populate the model with data
         self.model.select()
         
     def createConnection(self):
         self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-        self.database.setDatabaseName("files/gas.db")
+        self.database.setDatabaseName("files/car_log.db")
 
         if not self.database.open():
             print("Unable to open data source file.")
