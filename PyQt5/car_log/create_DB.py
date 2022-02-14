@@ -24,8 +24,8 @@ class CreateCarLogData:
     
     # Create maintenance table
     query.exec_("""CREATE TABLE maintenance (
-                Date INTEGER NOT NULL,
-                Mileage INTEGER NOT NULL,
+                Date TEXT NOT NULL,
+                Mileage TEXT NOT NULL,
                 Item TEXT NOT NULL)""")
     
     query.exec_("""INSERT INTO maintenance(Date, Mileage, Item)
@@ -37,9 +37,9 @@ class CreateCarLogData:
     
     # Create gas table
     query.exec_("""CREATE TABLE gas (
-                Date INTEGER NOT NULL,
-                Gallons INTEGER NOT NULL,
-                Cost INTEGER NOT NULL,
+                Date TEXT NOT NULL,
+                Gallons TEXT NOT NULL,
+                Cost TEXT NOT NULL,
                 Odometer_Reading INTEGER NOT NULL)""")
 
     query.exec_("""INSERT INTO gas(Date, Gallons, Cost, Odometer_Reading)
