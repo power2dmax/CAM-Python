@@ -12,7 +12,8 @@ class CreateCarLogData:
     # Create connection to database. If db file does not exist,
     # a new db file will be created.
     database = QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-    database.setDatabaseName("files/car_log_2.db")
+    database.setDatabaseName("files/maintenance.db")
+    #database.setDatabaseName("files/gas.db")
 
     if not database.open():
         print("Unable to open data source file.")
@@ -27,23 +28,6 @@ class CreateCarLogData:
                 Date TEXT NOT NULL,
                 Mileage TEXT NOT NULL,
                 Item TEXT NOT NULL)""")
-    
-    # Create gas table
-    query.exec_("""CREATE TABLE gas (
-                Date TEXT NOT NULL,
-                Odometer_Reading TEXT NOT NULL,
-                Mileage TEXT NOT NULL,
-                Gallons TEXT NOT NULL,
-                Cost TEXT NOT NULL)""")
-
-
-    # Positional binding to insert records into the database
-    query.prepare("""INSERT INTO maintenance (
-                  Date, Mileage, Item) VALUES
-                  ('01/13/21', '25174', 'Oil Change'),
-                  ('02/23/21', '26678', 'Tire Rotation'),
-                  ('03/03/21', '28743', 'Tune up')
-                  """)
 
     print("[INFO] Database successfully created.")
 
