@@ -5,9 +5,7 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 class CreateCarLogData:
     """
-    Create sample database for project.
-    Class demonstrates how to connect to a database, create queries, and
-    create tables and records in those tables.
+    Create the database for the car log program
     """
     # Create connection to database. If db file does not exist,
     # a new db file will be created.
@@ -26,16 +24,30 @@ class CreateCarLogData:
     
     # Create maintenance table
     query.exec_("""CREATE TABLE maintenance (
-                Date TEXT NOT NULL,
-                Mileage TEXT NOT NULL,
+                Date INTEGER NOT NULL,
+                Mileage INTEGER NOT NULL,
                 Item TEXT NOT NULL)""")
+    
+    query.exec_("""INSERT INTO maintenance(Date, Mileage, Item)
+                VALUES('01/12/21', '22135', 'Oil Change'),
+                ('05/18/21', '24385', 'Tire Rotation'),
+                ('07/08/21', '25875', 'Air Filter'),
+                ('08/21/21', '26897', 'Oil Change')
+                """)
     
     # Create gas table
     query.exec_("""CREATE TABLE gas (
-                Date TEXT NOT NULL,
-                Gallons TEXT NOT NULL,
-                Cost TEXT NOT NULL,
-                Odometer_Reading TEXT NOT NULL)""")
+                Date INTEGER NOT NULL,
+                Gallons INTEGER NOT NULL,
+                Cost INTEGER NOT NULL,
+                Odometer_Reading INTEGER NOT NULL)""")
+
+    query.exec_("""INSERT INTO gas(Date, Gallons, Cost, Odometer_Reading)
+                VALUES('01/08/21', '12', '$23.75', '220'),
+                ('01/17/21', '11', '$22.63', '188'),
+                ('01/24/21', '9', '$21.05', '175')
+                """)
+    
 
     print("[INFO] Database successfully created.")
 

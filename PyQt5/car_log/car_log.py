@@ -29,7 +29,7 @@ class App(qtw.QMainWindow):
 
     def initializeUI(self):
         
-        self.setWindowTitle('PyQt5 Examples')
+        self.setWindowTitle('Car Log')
         self.resize(500, 650)
         
         self.styleSheet()
@@ -45,8 +45,6 @@ class App(qtw.QMainWindow):
         # Create the actions for the "Files Menu"
         self.add_row = qtw.QAction('Add Row', self)
         self.add_row.setShortcut('Ctrl+A')
-        #self.add_row.setIcon(qtg.QIcon("icons/add_row.png"))
-        #self.add_row.triggered.connect(self.addRecord)
         
         self.exit_action = qtw.QAction('Exit', self)
         self.exit_action.setShortcut('Ctrl+Q')
@@ -60,7 +58,10 @@ class App(qtw.QMainWindow):
         self.crazyTheme = qtw.QAction('Crazy Theme', self)
         self.crazyTheme.triggered.connect(self.crazyStyleSheet)
         
+        #self.payCalc = PaymentCalculator(self)
         self.payment_calc = qtw.QAction('Payment Calculator', self)
+        self.payment_calc.setIcon(qtg.QIcon("icons/calc.png"))
+        self.payment_calc.triggered.connect(self.payCalc)
         
         # Create actions for the "Help Menu" menu
         self.about_action = qtw.QAction('About', self)
@@ -69,7 +70,8 @@ class App(qtw.QMainWindow):
         
     def menuWidget(self):
         # Create the status bar
-        self.statusBar().showMessage('Welcome to Car Maintenance Log')
+        self.statusbar = self.statusBar()
+        self.statusBar().showMessage('Welcome to your Car Log')
         
         # Create the menubar
         menu_bar = self.menuBar()
@@ -81,7 +83,7 @@ class App(qtw.QMainWindow):
         
         toolsMenu = menu_bar.addMenu('Tools')
         toolsMenu.addAction(self.payment_calc)
-        themesMenu = toolsMenu.addMenu('Themes')
+        themesMenu = toolsMenu.addMenu(qtg.QIcon("icons/theme.png"), 'Themes')
         themesMenu.addAction(self.nativeTheme)
         themesMenu.addAction(self.blueTheme)
         themesMenu.addAction(self.crazyTheme)
@@ -101,6 +103,11 @@ class App(qtw.QMainWindow):
         if message == qtw.QMessageBox.Yes:
             #self.database.close()
             self.close()
+            
+    def payCalc(self):
+        calc = PaymentCalculator(self)
+        calc.resize(250, 250)
+        calc.show()
             
     def aboutInfo(self):
         text_1 = "CAM's car log, written in Python \n"
@@ -150,32 +157,50 @@ class App(qtw.QMainWindow):
         QTableView {
             background-color: plum;
         }
+        QLabel {
+            background-color: yellow;
+        }
+        QPushButton {
+            background-color: yellow;
+        }
         
         """
         self.setStyleSheet(stylesheet)
+    
+    
+class PaymentCalculator(qtw.QDialog):
+    
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle('Payment Calculator')
+        self.setLayout(qtw.QGridLayout())
+        self.label = qtw.QLabel("<h2>Nothing to see here yet... \nCome back real soon<h2>")
+        self.layout().addWidget(self.label, 0, 0)
         
     
 class MainWindow(qtw.QWidget):
     
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
-        self.layout = qtw.QVBoxLayout(self)
+        layout = qtw.QVBoxLayout(self)
         
         # Initialize tab screen
-        self.tabs = qtw.QTabWidget()
-        self.tab1 = Maintenance(self)
-        self.tab2 = Gas(self)
-        self.tabs.resize(300,200)
+        tabs = qtw.QTabWidget()
+        tab1 = Maintenance(self)
+        tab2 = Gas(self)
+        tabs.resize(300,200)
         
         # Add tabs
-        self.tabs.addTab(self.tab1,"Maintenance")
-        self.tabs.addTab(self.tab2,"Gas")
+        tabs.addTab(tab1,"Maintenance")
+        tabs.addTab(tab2,"Gas")
         
         # Add tabs to widget
-        self.layout.addWidget(self.tabs)
-        self.setLayout(self.layout)
+        layout.addWidget(tabs)
+        self.setLayout(layout)
+        
         
 class Maintenance(qtw.QWidget):
+    
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
         
@@ -186,30 +211,30 @@ class Maintenance(qtw.QWidget):
         layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
         
-        self.add_row = qtw.QPushButton("Add Row")
-        self.add_row.setIcon(qtg.QIcon("icons/add_row.png"))
-        self.add_row.setStyleSheet("padding: 6px")
-        self.add_row.clicked.connect(self.addRow)
+        add_row = qtw.QPushButton("Add Row")
+        add_row.setIcon(qtg.QIcon("icons/add_row.png"))
+        add_row.setStyleSheet("padding: 6px")
+        add_row.clicked.connect(self.addRow)
         
-        self.del_row = qtw.QPushButton("Delete Row")
-        self.del_row.setIcon(qtg.QIcon("icons/del_row.png"))
-        self.del_row.setStyleSheet("padding: 6px")
-        self.del_row.clicked.connect(self.deleteRow)
+        del_row = qtw.QPushButton("Delete Row")
+        del_row.setIcon(qtg.QIcon("icons/del_row.png"))
+        del_row.setStyleSheet("padding: 6px")
+        del_row.clicked.connect(self.deleteRow)
         
-        self.sorting_options = ["Sort by Date", "Sort by Mileage","Sort by Item"] # Set up sorting combo box
-        self.sort_name_cb = qtw.QComboBox()
-        self.sort_name_cb.addItems(self.sorting_options)
-        self.sort_name_cb.currentTextChanged.connect(self.setSortingOrder)
+        sorting_options = ["Sort by Date", "Sort by Mileage","Sort by Item"] # Set up sorting combo box
+        sort_name_cb = qtw.QComboBox()
+        sort_name_cb.addItems(sorting_options)
+        sort_name_cb.currentTextChanged.connect(self.setSortingOrder)
         
-        self.sorting_text = qtw.QLabel("Sorting Options: ")
+        sorting_text = qtw.QLabel("Sorting Options: ")
         
-        top_layout.addWidget(self.add_row)
-        top_layout.addWidget(self.del_row)
+        top_layout.addWidget(add_row)
+        top_layout.addWidget(del_row)
         top_layout.addStretch()
-        top_layout.addWidget(self.sorting_text)
-        top_layout.addWidget(self.sort_name_cb)
+        top_layout.addWidget(sorting_text)
+        top_layout.addWidget(sort_name_cb)
         top_layout.addStretch()
-        self.setLayout(top_layout)
+        #self.setLayout(top_layout)
         
         # Setting up the user actions for the car log tracker 
         title = qtw.QLabel("Maintenance Log")
@@ -218,9 +243,9 @@ class Maintenance(qtw.QWidget):
         
         # Create table view and set model
         self.table_view = qtw.QTableView()
-        self.header = self.table_view.horizontalHeader()
+        header = self.table_view.horizontalHeader()
         self.table_view.setModel(self.model)
-        self.header.setStretchLastSection(True)
+        header.setStretchLastSection(True)
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
@@ -304,15 +329,15 @@ class Gas(qtw.QWidget):
         layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
         
-        self.add_row = qtw.QPushButton("Add Row")
-        self.add_row.setIcon(qtg.QIcon("icons/add_row.png"))
-        self.add_row.setStyleSheet("padding: 6px")
-        self.add_row.clicked.connect(self.addRow)
+        add_row = qtw.QPushButton("Add Row")
+        add_row.setIcon(qtg.QIcon("icons/add_row.png"))
+        add_row.setStyleSheet("padding: 6px")
+        add_row.clicked.connect(self.addRow)
         
-        self.del_row = qtw.QPushButton("Delete Row")
-        self.del_row.setIcon(qtg.QIcon("icons/del_row.png"))
-        self.del_row.setStyleSheet("padding: 6px")
-        self.del_row.clicked.connect(self.deleteRow)
+        del_row = qtw.QPushButton("Delete Row")
+        del_row.setIcon(qtg.QIcon("icons/del_row.png"))
+        del_row.setStyleSheet("padding: 6px")
+        del_row.clicked.connect(self.deleteRow)
         
         # Setting up the user actions for the car log tracker 
         title = qtw.QLabel("Gas Log")
@@ -322,15 +347,13 @@ class Gas(qtw.QWidget):
         avgMpgText = qtw.QLabel("Average MPG is:")
         avgMpgCalc = qtw.QLabel("32 MPG")
         
-        top_layout.addWidget(self.add_row)
-        top_layout.addWidget(self.del_row)
+        top_layout.addWidget(add_row)
+        top_layout.addWidget(del_row)
         top_layout.addStretch()
-        top_layout.addWidget(avgMpgText)
-        top_layout.addWidget(avgMpgCalc)
+        #top_layout.addWidget(avgMpgText)
+        #top_layout.addWidget(avgMpgCalc)
         top_layout.addStretch()
-        
-        #self.setLayout(top_layout)
-        
+                
         # Create table view and set model
         self.table_view = qtw.QTableView()
         self.header = self.table_view.horizontalHeader()
