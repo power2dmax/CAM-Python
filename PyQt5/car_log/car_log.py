@@ -106,7 +106,7 @@ class App(qtw.QMainWindow):
             
     def payCalc(self):
         calc = PaymentCalculator(self)
-        calc.resize(250, 250)
+        calc.resize(350, 250)
         calc.show()
             
     def aboutInfo(self):
@@ -174,9 +174,41 @@ class PaymentCalculator(qtw.QDialog):
         super().__init__(parent)
         self.setWindowTitle('Payment Calculator')
         self.setLayout(qtw.QGridLayout())
-        self.label = qtw.QLabel("<h2>Nothing to see here yet... \nCome back real soon<h2>")
-        self.layout().addWidget(self.label, 0, 0)
+        self.topLabel = qtw.QLabel("<h3>Payment Calculator<h3>")
+        self.carPriceText = qtw.QLabel("Enter the Purchase Price:")
+        self.carPriceEntry = qtw.QLineEdit()
+        self.interestRateText = qtw.QLabel("Enter the Interest Rate:")
+        self.interestRateEntry = qtw.QLineEdit()
+        self.termLengthText = qtw.QLabel("Enter the Number of Years:")
+        self.termLengthEntry = qtw.QLineEdit()
         
+        self.monthlyPayment = 0.0
+        
+        self.calculationButton = qtw.QPushButton('Calculate')
+        self.calculationButton.clicked.connect(self.calculatePayment)
+        
+        self.exitButton = qtw.QPushButton('Exit')
+        self.exitButton.clicked.connect(self.close)
+        
+        self.layout().addWidget(self.topLabel, 0, 0)
+        self.layout().addWidget(self.exitButton, 0, 1)
+        self.layout().addWidget(self.carPriceText, 1, 0)
+        self.layout().addWidget(self.carPriceEntry, 1, 1)
+        self.layout().addWidget(self.interestRateText, 2, 0)
+        self.layout().addWidget(self.interestRateEntry, 2, 1)
+        self.layout().addWidget(self.termLengthText, 3, 0)
+        self.layout().addWidget(self.termLengthEntry, 3, 1)
+        
+        self.layout().addWidget(self.calculationButton, 4, 0)
+        #self.layout().addWidget(self.monthlyPayment, 4, 1)
+        
+        
+        
+        
+    def calculatePayment(self):
+        pass
+        """self.monthlyPayment = int(carPriceEntry*interestRateEntry)/(12*termLengthEntry)
+        return self.monthlyPayment"""
     
 class MainWindow(qtw.QWidget):
     
@@ -221,7 +253,7 @@ class Maintenance(qtw.QWidget):
         del_row.setStyleSheet("padding: 6px")
         del_row.clicked.connect(self.deleteRow)
         
-        sorting_options = ["Sort by Date", "Sort by Mileage","Sort by Item"] # Set up sorting combo box
+        sorting_options = ["Sort by Date", "Sort by Mileage", "Sort by Cost", "Sort by Description"] # Set up sorting combo box
         sort_name_cb = qtw.QComboBox()
         sort_name_cb.addItems(sorting_options)
         sort_name_cb.currentTextChanged.connect(self.setSortingOrder)
@@ -277,7 +309,8 @@ class Maintenance(qtw.QWidget):
         self.model.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
         self.model.setHeaderData(self.model.fieldIndex('Date'), qtc.Qt.Horizontal, "Date")
         self.model.setHeaderData(self.model.fieldIndex('Mileage'), qtc.Qt.Horizontal, "Mileage")
-        self.model.setHeaderData(self.model.fieldIndex('Item'), qtc.Qt.Horizontal, "Item")
+        self.model.setHeaderData(self.model.fieldIndex('Cost'), qtc.Qt.Horizontal, "Cost")
+        self.model.setHeaderData(self.model.fieldIndex('Description'), qtc.Qt.Horizontal, "Description")
         
         # Populate the model with data
         self.model.select()
@@ -311,9 +344,11 @@ class Maintenance(qtw.QWidget):
         if text == "Sort by Date":
             self.model.setSort(self.model.fieldIndex('Date'), qtc.Qt.AscendingOrder)
         elif text == "Sort by Mileage":
-            self.model.setSort(self.model.fieldIndex('Milage'), qtc.Qt.AscendingOrder)
-        elif text == "Sort by Item":
-            self.model.setSort(self.model.fieldIndex('Item'), qtc.Qt.AscendingOrder)
+            self.model.setSort(self.model.fieldIndex('Mileage'), qtc.Qt.AscendingOrder)
+        elif text == "Sort by Cost":
+            self.model.setSort(self.model.fieldIndex('Cost'), qtc.Qt.AscendingOrder)
+        elif text == "Sort by Description":
+            self.model.setSort(self.model.fieldIndex('Description'), qtc.Qt.AscendingOrder)
         
         self.model.select()
 
