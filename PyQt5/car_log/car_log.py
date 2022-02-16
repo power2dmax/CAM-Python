@@ -19,6 +19,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 class App(qtw.QMainWindow):
 
@@ -51,11 +52,23 @@ class App(qtw.QMainWindow):
         self.exit_action.setIcon(qtg.QIcon("icons/exit.png"))
         self.exit_action.triggered.connect(self.exitMessage)
         
-        self.nativeTheme = qtw.QAction('Native Theme', self)
+        self.nativeTheme = qtw.QAction('Native', self)
+        self.nativeTheme.setIcon(qtg.QIcon("icons/monitor.png"))
         self.nativeTheme.triggered.connect(self.nativeStyleSheet)
-        self.blueTheme = qtw.QAction('Blue Theme', self)
+        self.blueTheme = qtw.QAction('Blue', self)
+        self.blueTheme.setIcon(qtg.QIcon("icons/monitor.png"))
         self.blueTheme.triggered.connect(self.blueStyleSheet)
-        self.crazyTheme = qtw.QAction('Crazy Theme', self)
+        self.chromeTheme = qtw.QAction('Chrome', self)
+        self.chromeTheme.setIcon(qtg.QIcon("icons/monitor.png"))
+        self.chromeTheme.triggered.connect(self.chromeStyleSheet)
+        self.meshTheme = qtw.QAction('Mesh', self)
+        self.meshTheme.setIcon(qtg.QIcon("icons/monitor.png"))
+        self.meshTheme.triggered.connect(self.meshStyleSheet)
+        self.digitalBlueTheme = qtw.QAction('Digital Blue', self)
+        self.digitalBlueTheme.setIcon(qtg.QIcon("icons/monitor.png"))
+        self.digitalBlueTheme.triggered.connect(self.digitalBlueStyleSheet)
+        self.crazyTheme = qtw.QAction('Crazy', self)
+        self.crazyTheme.setIcon(qtg.QIcon("icons/monitor.png"))
         self.crazyTheme.triggered.connect(self.crazyStyleSheet)
         
         #self.payCalc = PaymentCalculator(self)
@@ -86,6 +99,9 @@ class App(qtw.QMainWindow):
         themesMenu = toolsMenu.addMenu(qtg.QIcon("icons/theme.png"), 'Themes')
         themesMenu.addAction(self.nativeTheme)
         themesMenu.addAction(self.blueTheme)
+        themesMenu.addAction(self.chromeTheme)
+        themesMenu.addAction(self.meshTheme)
+        themesMenu.addAction(self.digitalBlueTheme)
         themesMenu.addAction(self.crazyTheme)
         
         help_menu = menu_bar.addMenu('Help')
@@ -106,7 +122,7 @@ class App(qtw.QMainWindow):
             
     def payCalc(self):
         calc = PaymentCalculator(self)
-        calc.resize(350, 250)
+        calc.resize(200, 160)
         calc.show()
             
     def aboutInfo(self):
@@ -134,17 +150,78 @@ class App(qtw.QMainWindow):
     def blueStyleSheet(self):
         stylesheet = """
         QMainWindow {
-            background-color: lightblue;
+            background-color: lightsteelblue;
         }
         QPushButton {
             font-size: 10pt;
+            background-color: azure;
+        }
+        QLabel {
+            color: white
         }
         QTableView {
             background-color: aliceblue;
         }
-        
+        QMessageBox {
+            background-color: lightsteelblue;
+        }
+        QMenuBar {
+            background-color: powderblue;
+        }
+        QTabWidget {
+            background-color: powderblue;
+        }
+        .QWidget {
+           background: url(files/tile.png);
+        }
         """
         self.setStyleSheet(stylesheet)
+        
+    def chromeStyleSheet(self):
+        stylesheet = """
+        QMainWindow {
+            background: url(files/chrome.png);
+        }
+        QLabel {
+            color: silver
+        }
+        QMessageBox {
+            background: url(files/chrome.png);
+        }
+        """
+        self.setStyleSheet(stylesheet)
+        
+    def meshStyleSheet(self):
+        stylesheet = """
+        QMainWindow {
+            background: url(files/mesh.png);
+        }
+        QLabel {
+            color: white
+        }
+        QMessageBox {
+            background: url(files/mesh.png);
+        }
+        """
+        self.setStyleSheet(stylesheet)
+    
+    def digitalBlueStyleSheet(self):
+        stylesheet = """
+        QMainWindow {
+            background: url(files/blue_mesh.png);
+        }
+        QLabel {
+            color: white
+        }
+        QMessageBox {
+            background: url(files/blue_mesh.png);
+        }
+        QTableView {
+            background-color: aliceblue;
+        }
+        """
+        self.setStyleSheet(stylesheet)
+    
     
     def crazyStyleSheet(self):
         stylesheet = """
@@ -175,40 +252,43 @@ class PaymentCalculator(qtw.QDialog):
         self.setWindowTitle('Payment Calculator')
         self.setLayout(qtw.QGridLayout())
         self.topLabel = qtw.QLabel("<h3>Payment Calculator<h3>")
-        self.carPriceText = qtw.QLabel("Enter the Purchase Price:")
-        self.carPriceEntry = qtw.QLineEdit()
-        self.interestRateText = qtw.QLabel("Enter the Interest Rate:")
-        self.interestRateEntry = qtw.QLineEdit()
-        self.termLengthText = qtw.QLabel("Enter the Number of Years:")
-        self.termLengthEntry = qtw.QLineEdit()
+        self.carPriceText = qtw.QLabel("Purchase Price:")
+        self.carPrice = qtw.QLineEdit()
+        self.interestRateText = qtw.QLabel("Interest Rate:")
+        self.interestRate = qtw.QLineEdit()
+        self.termLengthText = qtw.QLabel("Number of Years:")
+        self.termLength = qtw.QLineEdit()
         
-        self.monthlyPayment = 0.0
+        self.monthlyPayment = '0'
+        self.payment = qtw.QLabel('Still figuring it out')
         
-        self.calculationButton = qtw.QPushButton('Calculate')
-        self.calculationButton.clicked.connect(self.calculatePayment)
+        self.calculationButton = qtw.QPushButton('Calculate Payment')
+        #self.calculationButton.clicked.connect(self.calculatePayment)
         
         self.exitButton = qtw.QPushButton('Exit')
         self.exitButton.clicked.connect(self.close)
         
         self.layout().addWidget(self.topLabel, 0, 0)
-        self.layout().addWidget(self.exitButton, 0, 1)
         self.layout().addWidget(self.carPriceText, 1, 0)
-        self.layout().addWidget(self.carPriceEntry, 1, 1)
+        self.layout().addWidget(self.carPrice, 1, 1)
         self.layout().addWidget(self.interestRateText, 2, 0)
-        self.layout().addWidget(self.interestRateEntry, 2, 1)
+        self.layout().addWidget(self.interestRate, 2, 1)
         self.layout().addWidget(self.termLengthText, 3, 0)
-        self.layout().addWidget(self.termLengthEntry, 3, 1)
+        self.layout().addWidget(self.termLength, 3, 1)
         
         self.layout().addWidget(self.calculationButton, 4, 0)
-        #self.layout().addWidget(self.monthlyPayment, 4, 1)
+        self.layout().addWidget(self.payment, 4, 1)
         
-        
+        self.layout().addWidget(self.exitButton, 99, 1)
         
         
     def calculatePayment(self):
-        pass
-        """self.monthlyPayment = int(carPriceEntry*interestRateEntry)/(12*termLengthEntry)
-        return self.monthlyPayment"""
+        price = self.carPrice
+        monthlyInterest = int(self.interestRate / 12)
+        months = self.termLength*12
+        self.monthlyPayment = int((self.price*((monthlyRate)*(1+monthlyRate)**months))/(((1+monthlyRate)**(months)-1)))
+        print(self.monthlyPayment)
+        return self.monthlyPayment
     
 class MainWindow(qtw.QWidget):
     
@@ -242,6 +322,7 @@ class Maintenance(qtw.QWidget):
         
         layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
+        bottom_layout = qtw.QHBoxLayout(self)
         
         add_row = qtw.QPushButton("Add Row")
         add_row.setIcon(qtg.QIcon("icons/add_row.png"))
@@ -281,10 +362,26 @@ class Maintenance(qtw.QWidget):
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
+        # Calculate the total cost of the maintenance performed by adding the results in the costs column
+        result = 0
+        query = QSqlQuery("SELECT Cost FROM maintenance")
+        while query.next():
+            result = result + query.value(0)
+        totalCost =str(result)
+        totalCostText_1 = qtw.QLabel('The Total Maintenance Cost is: $')
+        totalCostText_1.setFont(qtg.QFont('Arial', 9))
+        totalCostText_2 = qtw.QLabel(totalCost)
+        totalCostText_2.setFont(qtg.QFont('Arial', 9))
+        bottom_layout.addWidget(totalCostText_1)
+        bottom_layout.addWidget(totalCostText_2)
+        bottom_layout.addStretch()
+                
+        # Set the overall layouit
         layout.addLayout(top_layout)
         layout.addWidget(title, qtc.Qt.AlignLeft)
         layout.addWidget(self.table_view)
-    
+        layout.addLayout(bottom_layout)
+        
     def createConnection(self):
         self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
         self.database.setDatabaseName("files/car_log.db")
@@ -363,6 +460,7 @@ class Gas(qtw.QWidget):
         
         layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
+        bottom_layout = qtw.QHBoxLayout(self)
         
         add_row = qtw.QPushButton("Add Row")
         add_row.setIcon(qtg.QIcon("icons/add_row.png"))
@@ -380,14 +478,19 @@ class Gas(qtw.QWidget):
         title.setStyleSheet("font: bold 24px")
         
         avgMpgText = qtw.QLabel("Average MPG is:")
+        avgMpgText.setFont(qtg.QFont('Arial', 9))
         avgMpgCalc = qtw.QLabel("32 MPG")
+        avgMpgCalc.setFont(qtg.QFont('Arial', 9))
         
         top_layout.addWidget(add_row)
         top_layout.addWidget(del_row)
         top_layout.addStretch()
-        #top_layout.addWidget(avgMpgText)
-        #top_layout.addWidget(avgMpgCalc)
         top_layout.addStretch()
+        
+        
+        bottom_layout.addWidget(avgMpgText)
+        bottom_layout.addWidget(avgMpgCalc)
+        bottom_layout.addStretch()
                 
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -400,7 +503,7 @@ class Gas(qtw.QWidget):
         layout.addLayout(top_layout)
         layout.addWidget(title, qtc.Qt.AlignLeft)
         layout.addWidget(self.table_view)
-        #self.layout.addWidget(bottom_layout)
+        layout.addLayout(bottom_layout)        
         
     def createTable(self):
         """

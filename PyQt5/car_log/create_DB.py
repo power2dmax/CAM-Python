@@ -2,8 +2,7 @@
 """
 Create the database for the car log program
 """
-
-import sys, random
+import sys, os
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 class CreateCarLogData:
@@ -24,29 +23,33 @@ class CreateCarLogData:
     
     # Create maintenance table
     query.exec_("""CREATE TABLE maintenance (
-                Date TEXT NOT NULL,
-                Mileage TEXT NOT NULL,
-                Cost TEXT NOT NULL,
+                Date INTEGER NOT NULL,
+                Mileage INTEGER NOT NULL,
+                Cost INTEGER NOT NULL,
                 Description TEXT NOT NULL)""")
     
     query.exec_("""INSERT INTO maintenance(Date, Mileage, Cost, Description)
-                VALUES('01/12/21', '22,135', '$195.00', 'Oil Change'),
-                ('05/18/21', '24,385', '$35.00', 'Tire Rotation'),
-                ('07/08/21', '25,875', '$75.00', 'Air Filter'),
-                ('08/21/21', '26,897', '$105.00', 'Oil Change')
+                VALUES('12/27/07', '7500', '35', 'Oil Change'),
+                ('2008-05-30', '9500', '125.00', 'Battery'),
+                ('12/24/08', '11629', '35.00', 'Oil Change'),
+                ('01/12/21', '22135', '35.00', 'Oil Change'),
+                ('05/18/21', '24385', '0', 'Tire Rotation'),
+                ('07/08/21', '25875', '35.00', 'Air Filter'),
+                ('08/21/21', '26897', '35.00', 'Oil Change'),
+                ('01/28/22', '107868', '125.00', 'Battery')
                 """)
     
     # Create gas table
     query.exec_("""CREATE TABLE gas (
                 Date TEXT NOT NULL,
                 Gallons TEXT NOT NULL,
-                Cost TEXT NOT NULL,
+                Cost INTEGER NOT NULL,
                 Odometer_Reading INTEGER NOT NULL)""")
 
     query.exec_("""INSERT INTO gas(Date, Gallons, Cost, Odometer_Reading)
-                VALUES('01/08/21', '12', '$23.75', '220'),
-                ('01/17/21', '11', '$22.63', '188'),
-                ('01/24/21', '9', '$21.05', '175')
+                VALUES('01/08/21', '12', '23.75', '220'),
+                ('01/17/21', '11', '22.63', '188'),
+                ('01/24/21', '9', '21.05', '175')
                 """)
     
 
