@@ -1,0 +1,13 @@
+car_log directory structure
+
+CarLog/
+|---car_log
+|   |---App
+|   |---images
+|   |   |---*.png
+|   |---files
+|   |   |---car_lg.db
+|   |---icons
+|   |   |---*.png
+|   |---MainWindow
+|---run.py
