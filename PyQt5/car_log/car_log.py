@@ -173,7 +173,7 @@ class App(qtw.QMainWindow):
             background-color: powderblue
         }
         .QWidget {
-           background: url(files/tile.png)
+           background: url(images/tile.png)
         }
         """
         self.setStyleSheet(stylesheet)
@@ -181,13 +181,13 @@ class App(qtw.QMainWindow):
     def chromeStyleSheet(self):
         stylesheet = """
         QMainWindow {
-            background: url(files/chrome.png)
+            background: url(images/chrome.png)
         }
         QLabel {
             color: silver
         }
         QMessageBox {
-            background: url(files/chrome.png)
+            background: url(images/chrome.png)
         }
         """
         self.setStyleSheet(stylesheet)
@@ -195,7 +195,7 @@ class App(qtw.QMainWindow):
     def meshStyleSheet(self):
         stylesheet = """
         QMainWindow, QMessageBox {
-            background: url(files/mesh.png)
+            background: url(images/mesh.png)
         }
         QTableView {
             background: lightgray
@@ -214,14 +214,14 @@ class App(qtw.QMainWindow):
     def digitalBlueStyleSheet(self):
         stylesheet = """
         QMainWindow {
-            background: url(files/blue_mesh.png)
+            background: url(images/blue_mesh.png)
         }
         QLabel {
             color: white;
             font: bold
         }
         QTableView, QMessageBox, QComboBox, QPushButton  {
-            background: url(files/light_blue_steel.png)
+            background: url(images/light_blue_steel.png)
         }
         QPushButton:hover {
             background: lightblue
@@ -277,7 +277,7 @@ class App(qtw.QMainWindow):
             margin-top: 2px; /* make non-selected tabs look smaller */
         }
         QDialog {
-            background: url(files/blue_mesh.png)
+            background: url(images/blue_mesh.png)
         }
         QDialog QLabel {
             color: white;
@@ -293,10 +293,10 @@ class App(qtw.QMainWindow):
     def southWestStyleSheet(self):
         stylesheet = """
         QMainWindow {
-            background: url(files/south_west.png)
+            background: url(images/south_west.png)
         }
         QTableView {
-            background: url(files/south_rug.png);
+            background: url(images/south_rug.png);
             color: white;
             font: bold 14px
         }
