@@ -197,8 +197,16 @@ class App(qtw.QMainWindow):
         QMainWindow, QMessageBox {
             background: url(files/mesh.png)
         }
+        QTableView {
+            background: lightgray
+        }
         QLabel {
-            color: white
+            color: white;
+            font: bold 12px
+        }
+        QStatusBar {
+            color: white;
+            font: bold 12px
         }
         """
         self.setStyleSheet(stylesheet)
@@ -403,7 +411,7 @@ class CarInformation(qtw.QWidget):
         super(qtw.QWidget, self).__init__(parent)
         
         layout = qtw.QVBoxLayout(self)
-        
+
         
 class Maintenance(qtw.QWidget):
     
