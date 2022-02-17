@@ -18,9 +18,9 @@ Several files support the car_maintenance_log program
 
 - car_log_layout.pptx
 	Used for originial concept of the layout of the application widgets
-- create_car_log_database.py
+- create_db.py
 	Used to create the database used for the car_maintenance_log program
-- read_car_log_db.py
+- read_db.py
 	Used to review the database ensuring that it was created correctly
 
 
