@@ -343,7 +343,7 @@ class PaymentCalculator(qtw.QDialog):
         self.carPrice.setValidator(qtg.QIntValidator(0, 100000, self))
         self.interestRateText = qtw.QLabel("Interest Rate:")
         self.interestRate = qtw.QLineEdit()
-        self.interestRate.setValidator(qtg.QIntValidator(0, 10, self))
+        #self.interestRate.setValidator(qtg.QIntValidator(0, 10, self))
         self.termLengthText = qtw.QLabel("Number of Years:")
         self.termLength = qtw.QLineEdit()
         self.termLength.setValidator(qtg.QIntValidator(1, 10, self))
@@ -352,8 +352,8 @@ class PaymentCalculator(qtw.QDialog):
         self.payment = qtw.QLabel('Still figuring it out')
         monthlyPayment = str(10)
         self.calculationButton = qtw.QPushButton('Calculate Payment')
-        #self.calculationButton.clicked.connect(self.calculatePayment(monthlyPayment))
-        print(monthlyPayment)
+        #self.calculationButton.clicked.connect(self.calculatePayment)
+        #print(monthlyPayment)
         
         self.exitButton = qtw.QPushButton('Exit')
         self.exitButton.clicked.connect(self.close)
@@ -373,13 +373,15 @@ class PaymentCalculator(qtw.QDialog):
         
         
     def calculatePayment(self, monthlyPayment):
-        """price = self.carPrice
-        monthlyInterest = self.interestRate / 12
+        price = self.carPrice
+        interest = self.interestRate
+        monthlyInterest = interest / 12
         months = self.termLength*12
         self.monthlyPayment = int((self.price*((monthlyRate)*(1+monthlyRate)**months))/(((1+monthlyRate)**(months)-1)))
-        print(self.monthlyPayment)"""
+        print(self.monthlyPayment)
         monthlyPayment = '0'
         return monthlyPayment
+    
     
 class MainWindow(qtw.QWidget):
     

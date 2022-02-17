@@ -2,12 +2,17 @@ car_log directory structure
 
 CarLog/
 |---car_log
-|   |---App
+|   |---App.py
 |   |---images
 |   |   |---*.png
 |   |---files
 |   |   |---car_lg.db
 |   |---icons
 |   |   |---*.png
-|   |---MainWindow
+|   |---maintenance
+|   |---gas.py
+|   |---paymentcalculator
+|   |---__init__.py
+|   |---__main__.py
+|   |---mainwindow.py
 |---run.py
