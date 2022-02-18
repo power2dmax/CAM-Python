@@ -14,12 +14,11 @@ to change the color scheme through themes in the tool menu and
 a car payment calculator
 """
 
-import sys, os, csv
+import sys
 from PyQt5 import QtWidgets as qtw
-from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+
 from .maintenance import Maintenance
 from .gas import Gas
 from .paymentcalculator import PaymentCalculator
@@ -133,7 +132,7 @@ class App(qtw.QMainWindow):
             
     def payCalc(self):
         calc = PaymentCalculator(self)
-        calc.resize(500, 600)
+        calc.resize(350, 350)
         calc.show()
             
     def aboutInfo(self):
@@ -249,7 +248,6 @@ class App(qtw.QMainWindow):
         QMenuBar::item:pressed {
             background: #888888;
         }
-        
         QTabWidget::pane { /* The tab widget frame */
             border-top: 2px solid #C2C7CB;
         }
@@ -284,7 +282,7 @@ class App(qtw.QMainWindow):
         }
         QDialog QLabel {
             color: white;
-            font: bold 10px
+            font: bold 12px
         }
         QStatusBar {
             color: white;
