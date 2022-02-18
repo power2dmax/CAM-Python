@@ -133,7 +133,7 @@ class App(qtw.QMainWindow):
             
     def payCalc(self):
         calc = PaymentCalculator(self)
-        calc.resize(200, 160)
+        calc.resize(500, 600)
         calc.show()
             
     def aboutInfo(self):
