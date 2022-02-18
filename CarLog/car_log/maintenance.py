@@ -31,7 +31,7 @@ class Maintenance(qtw.QWidget):
         del_row.setStyleSheet("padding: 6px")
         del_row.clicked.connect(self.deleteRow)
         
-        sorting_options = ["Sort by Date", "Sort by Mileage", "Sort by Cost", "Sort by Description"] # Set up sorting combo box
+        sorting_options = ["Sort by Mileage", "Sort by Cost", "Sort by Description"] # Set up sorting combo box
         sort_name_cb = qtw.QComboBox()
         sort_name_cb.addItems(sorting_options)
         sort_name_cb.currentTextChanged.connect(self.setSortingOrder)

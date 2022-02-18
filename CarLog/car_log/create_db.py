@@ -23,7 +23,7 @@ class CreateCarLogData:
     
     # Create maintenance table
     query.exec_("""CREATE TABLE maintenance (
-                Date INTEGER NOT NULL,
+                Date TETX NOT NULL,
                 Mileage FLOAT NOT NULL,
                 Cost FLOAT NOT NULL,
                 Description TEXT NOT NULL)""")
@@ -35,7 +35,7 @@ class CreateCarLogData:
                 ('2021-01-12', '22135', '35.33', 'Oil Change'),
                 ('2021-05-18', '24385', '12.21', 'Tire Rotation'),
                 ('2021-07-08', '25875', '35.33', 'Air Filter'),
-                ('2008-21-21', '26897', '35.33', 'Oil Change'),
+                ('2008-12-21', '26897', '35.33', 'Oil Change'),
                 ('2022-01-28', '107868', '125.12', 'Battery')
                 """)
     
@@ -73,4 +73,4 @@ class CreateCarLogData:
     sys.exit(0)
 
 if __name__ == "__main__":
-    CreateCarLogData()
+    CreateCarLogData() 
