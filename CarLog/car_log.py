@@ -453,14 +453,14 @@ class MainWindow(qtw.QWidget):
         tabs = qtw.QTabWidget()
         tab1 = Maintenance(self)
         tab2 = Gas(self)
-        tab3 = CarInformation(self)
+        #tab3 = CarInformation(self)
         tabs.resize(300,200)
         
         # Add tabs
         
         tabs.addTab(tab1,"Maintenance")
         tabs.addTab(tab2,"Gas")
-        tabs.addTab(tab3,"Information")
+        #tabs.addTab(tab3,"Information")
         
         # Add tabs to widget
         layout.addWidget(tabs)
