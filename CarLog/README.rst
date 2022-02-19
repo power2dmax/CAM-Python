@@ -50,4 +50,4 @@ None
 
 Screen Shot:
 ============
-.. image:: screenshot.png
+.. image:: screen_shot1.png
