@@ -3,33 +3,27 @@ Screen Shots
 ==========
 
 
-Maintenance page
+Maintenance page:
 ==========
 .. image:: screen_shot1.png
 
-
-Gas page
+Gas page:
 ==========
 .. image:: screen_shot2.png
 
-Usage:
+Payment Calculator:
 ==========
-Simply run the program. 
+.. image:: screen_shot3.png
 
-Development:
+Mesh Theme Applied:
 ===========
-
+.. image:: screen_shot4.png
 
 
 Notes:
 ==========
-None
+.. image:: screen_shot5.png
 
 Screen Shot:
 ============
-
-
-.. image:: screen_shot3.png
-.. image:: screen_shot4.png
-.. image:: screen_shot5.png
 .. image:: screen_shot6.png
