@@ -14,8 +14,8 @@ UI program written in Python and PyQt5 and uses SQLite for the backend database.
 The purpose is to create an application to track car maintenance performed and a 
 gas log. Several features includes a car payment calculator (under "Tools"), ability 
 to change the theme (under "Tools"), calculation of the total cost of maintenance, 
-and fuel economy calulation for the last gas log. See the screen shots below for 
-further examples
+and fuel economy calulation for the last gas log. See the screen shots under the
+screenshots folder for further examples
 
 Several files support the car_maintenance_log program
 - car_log.py 
@@ -47,12 +47,3 @@ The car maintenance program has the following features:
 Notes:
 ==========
 None
-
-Screen Shot:
-============
-.. image:: sccreenshots/screen_shot1.png
-.. image:: screen_shot2.png
-.. image:: screen_shot3.png
-.. image:: screen_shot4.png
-.. image:: screen_shot5.png
-.. image:: screen_shot6.png
