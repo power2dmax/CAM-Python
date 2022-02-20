@@ -19,11 +19,10 @@ Mesh Theme Applied:
 ===========
 .. image:: screen_shot4.png
 
-
-Notes:
+Blue Theme Applied:
 ==========
 .. image:: screen_shot5.png
 
-Screen Shot:
+Digital Theme Applied:
 ============
 .. image:: screen_shot6.png
