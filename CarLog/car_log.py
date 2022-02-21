@@ -31,6 +31,7 @@ class App(qtw.QMainWindow):
     def initializeUI(self):
         
         self.setWindowTitle('Car Log')
+        self.setWindowIcon(qtg.QIcon("icons/cam_2.png"))
         self.resize(500, 650)
         
         self.styleSheet()
@@ -72,6 +73,9 @@ class App(qtw.QMainWindow):
         self.southWestTheme = qtw.QAction(theme_icon, 'South West',
                 triggered=lambda: self.statusBar().showMessage('South West Theme'))
         self.southWestTheme.triggered.connect(self.southWestStyleSheet)
+        self.racerTheme = qtw.QAction(theme_icon, 'Racer',
+                triggered=lambda: self.statusBar().showMessage('Racer Theme'))
+        self.racerTheme.triggered.connect(self.raceStyleSheet)
         self.crazyTheme = qtw.QAction(theme_icon, 'Crazy',
                 triggered=lambda: self.statusBar().showMessage('Crazy Theme'))
         self.crazyTheme.triggered.connect(self.crazyStyleSheet)
@@ -110,6 +114,7 @@ class App(qtw.QMainWindow):
         themesMenu.addAction(self.meshTheme)
         themesMenu.addAction(self.digitalBlueTheme)
         themesMenu.addAction(self.southWestTheme)
+        themesMenu.addAction(self.racerTheme)
         themesMenu.addAction(self.crazyTheme)
         
         help_menu = menu_bar.addMenu('Help')
@@ -289,6 +294,23 @@ class App(qtw.QMainWindow):
         }
         """
         self.setStyleSheet(stylesheet)
+    
+    def raceStyleSheet(self):
+        stylesheet = """
+        QMainWindow {
+            background: url(images/race_cam.png)
+        }
+        QLabel {
+            color: white;
+            font: bold 12px
+        }
+        QStatusBar {
+            color: white;
+            font: bold 12px
+        }
+        """
+        self.setStyleSheet(stylesheet)
+    
     
     def southWestStyleSheet(self):
         stylesheet = """
