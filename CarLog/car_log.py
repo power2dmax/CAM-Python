@@ -311,7 +311,6 @@ class App(qtw.QMainWindow):
         """
         self.setStyleSheet(stylesheet)
     
-    
     def crazyStyleSheet(self):
         stylesheet = """
         QMainWindow { 
@@ -458,8 +457,8 @@ class MainWindow(qtw.QWidget):
         
         # Add tabs
         
-        tabs.addTab(tab1,"Maintenance")
-        tabs.addTab(tab2,"Gas")
+        tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
+        tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
         #tabs.addTab(tab3,"Information")
         
         # Add tabs to widget
@@ -484,6 +483,7 @@ class Maintenance(qtw.QWidget):
         self.createConnection()
         self.createTable()
         
+        # setup the layout
         layout = qtw.QVBoxLayout(self)
         top_layout = qtw.QHBoxLayout(self)
         bottom_layout = qtw.QHBoxLayout(self)
@@ -527,24 +527,26 @@ class Maintenance(qtw.QWidget):
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
         # Calculate the total cost of the maintenance performed by adding the results in the costs column
+        calculate_cost = qtw.QPushButton('Calculate Cost')
+        calculate_cost.clicked.connect(self.calculateCost)
+        calculate_cost.setIcon(qtg.QIcon("icons/calc.png"))
+        bottom_layout.addWidget(calculate_cost)
+        bottom_layout.addStretch()
+                
+        # Set the overall layout
+        layout.addLayout(top_layout)
+        layout.addWidget(title, qtc.Qt.AlignLeft)
+        layout.addWidget(self.table_view)
+        layout.addLayout(bottom_layout)
+        
+    def calculateCost(self):
         result = 0
         query = QSqlQuery("SELECT Cost FROM maintenance")
         while query.next():
             result = result + query.value(0)
         totalCost =str("%.2f" % (result))
-        totalCostText_1 = qtw.QLabel('The Total Maintenance Cost is: $')
-        totalCostText_1.setFont(qtg.QFont('Arial', 9))
-        totalCostText_2 = qtw.QLabel(totalCost)
-        totalCostText_2.setFont(qtg.QFont('Arial', 9))
-        bottom_layout.addWidget(totalCostText_1)
-        bottom_layout.addWidget(totalCostText_2)
-        bottom_layout.addStretch()
                 
-        # Set the overall layouit
-        layout.addLayout(top_layout)
-        layout.addWidget(title, qtc.Qt.AlignLeft)
-        layout.addWidget(self.table_view)
-        layout.addLayout(bottom_layout)
+        qtw.QMessageBox.information(self, 'Total Cost', 'The Total Maintenance Cost is: \n$' + totalCost)
         
     def createConnection(self):
         self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
@@ -636,6 +638,10 @@ class Gas(qtw.QWidget):
         del_row.setStyleSheet("padding: 6px")
         del_row.clicked.connect(self.deleteRow)
         
+        fuel_gauge = qtg.QPixmap("images/fuel_gauge.png")
+        fuel_gauge_label = qtw.QLabel()
+        fuel_gauge_label.setPixmap(fuel_gauge)
+        
         # Setting up the user actions for the car log tracker 
         title = qtw.QLabel("Gas Log")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
@@ -662,6 +668,7 @@ class Gas(qtw.QWidget):
         top_layout.addWidget(add_row)
         top_layout.addWidget(del_row)
         top_layout.addStretch()
+        top_layout.addWidget(fuel_gauge_label)
         top_layout.addStretch()
         
         bottom_layout.addWidget(avgMpgText)
