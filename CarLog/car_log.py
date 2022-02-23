@@ -378,7 +378,7 @@ class PaymentCalculator(qtw.QDialog):
         self.rate.setFont(qtg.QFont('Arial', 10))
   
         # creating a push button
-        calculate = qtw.QPushButton("Compute Payment", self)
+        calculate = qtw.QPushButton("Calculate Payment", self)
         calculate.clicked.connect(self.calculate_action)
   
         # creating a label to show monthly payment
@@ -386,7 +386,7 @@ class PaymentCalculator(qtw.QDialog):
         self.monthly_payment.setAlignment(qtc.Qt.AlignCenter)
         self.monthly_payment.setStyleSheet("QLabel"
                                      "{"
-                                     "border : 3px solid black;"
+                                     "border : 1px solid black;"
                                      "background : lightgray;"
                                      "}")
         self.monthly_payment.setFont(qtg.QFont('Arial', 10))
@@ -398,7 +398,7 @@ class PaymentCalculator(qtw.QDialog):
         self.total_payment.setAlignment(qtc.Qt.AlignCenter)
         self.total_payment.setStyleSheet("QLabel"
                                      "{"
-                                     "border : 3px solid black;"
+                                     "border : 1px solid black;"
                                      "background : lightgray;"
                                      "}")
         self.total_payment.setFont(qtg.QFont('Arial', 10))
@@ -555,8 +555,8 @@ class Maintenance(qtw.QWidget):
         bottom_layout.addStretch()
                 
         # Set the overall layout
-        layout.addLayout(top_layout)
         layout.addWidget(title, qtc.Qt.AlignLeft)
+        layout.addLayout(top_layout)
         layout.addWidget(self.table_view)
         layout.addLayout(bottom_layout)
         
@@ -632,7 +632,6 @@ class Gas(qtw.QWidget):
         
         layout = qtw.QVBoxLayout()
         self.setLayout(layout)
-        top_layout = qtw.QHBoxLayout()
         bottom_layout = qtw.QHBoxLayout()
         
         add_row = qtw.QPushButton("Add Row")
@@ -645,7 +644,7 @@ class Gas(qtw.QWidget):
         del_row.setStyleSheet("padding: 6px")
         del_row.clicked.connect(self.deleteRow)
         
-        fuel_gauge = qtg.QPixmap("images/fuel_gauge.png")
+        fuel_gauge = qtg.QPixmap("images/fuel_gauge_round.png")
         fuel_gauge_label = qtw.QLabel()
         fuel_gauge_label.setPixmap(fuel_gauge)
         
@@ -671,13 +670,23 @@ class Gas(qtw.QWidget):
         mpgText = qtw.QLabel("MPG")
         mpgText.setFont(qtg.QFont('Arial', 9))
         
-        # Setting up the 
-        top_layout.addWidget(add_row)
-        top_layout.addWidget(del_row)
-        top_layout.addStretch()
-        top_layout.addWidget(fuel_gauge_label)
-        top_layout.addStretch()
+        # Setting up the top layout, gonna have to layer this to get
+        #the gas gauge image to show properly
+        top_layout = qtw.QHBoxLayout()
+        top_left_layout = qtw.QVBoxLayout()
+        top_left_inner_layout = qtw.QHBoxLayout()
+        top_right_layout = qtw.QHBoxLayout()
+        top_left_inner_layout.addWidget(add_row)
+        top_left_inner_layout.addWidget(del_row)
+        top_left_layout.addWidget(title)
+        top_left_layout.addLayout(top_left_inner_layout)
+        top_right_layout.addStretch()
+        top_right_layout.addWidget(fuel_gauge_label)
+        top_right_layout.addStretch()
+        top_layout.addLayout(top_left_layout)
+        top_layout.addLayout(top_right_layout)
         
+        # Set up the bottom layout
         bottom_layout.addWidget(avgMpgText)
         bottom_layout.addWidget(avgMpgCalc)
         bottom_layout.addWidget(mpgText)
@@ -691,8 +700,8 @@ class Gas(qtw.QWidget):
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
+        #layout.addWidget(title, qtc.Qt.AlignLeft)
         layout.addLayout(top_layout)
-        layout.addWidget(title, qtc.Qt.AlignLeft)
         layout.addWidget(self.table_view)
         layout.addLayout(bottom_layout)        
         
@@ -739,16 +748,51 @@ class CheckList(qtw.QWidget):
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
         
-        layout = qtw.QVBoxLayout(self)
-        top_layout = qtw.QHBoxLayout
-        make_label = qtw
+        layout = qtw.QVBoxLayout()
+        self.setLayout(layout)
+        top_layout = qtw.QVBoxLayout()
+        
+        title = qtw.QLabel("Maintenance Checklist Items")
+        title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
+        title.setStyleSheet("font: bold 24px")
+        
+        top_layout.addWidget(title, qtc.Qt.AlignLeft)
+        
+        bottom_layout_right = qtw.QVBoxLayout()
+        bottom_layout_left = qtw.QHBoxLayout()
+        
+        oil_button = qtw.QCheckBox("Oil")
+        hoses_button = qtw.QCheckBox("Hoses")
+        belts_button = qtw.QCheckBox("Belts")
+        tp_button = qtw.QCheckBox("Tire Pressure")
+        coolent_button = qtw.QCheckBox("Coolent")
+        air_filter_button = qtw.QCheckBox("Air Filter")
+        brake_system_button = qtw.QCheckBox("Braking System")
+        battery_button = qtw.QCheckBox("Battery")
+        
+        wrench = qtg.QPixmap("images/wrench.png")
+        wrench_label = qtw.QLabel()
+        wrench_label.setPixmap(wrench)
+        
+        #bottom_layout_left.addStretch()
+        bottom_layout_left.addWidget(wrench_label)
+        
+        bottom_layout_right.addWidget(oil_button)
+        bottom_layout_right.addWidget(hoses_button)
+        bottom_layout_right.addWidget(belts_button)
+        bottom_layout_right.addWidget(tp_button)
+        bottom_layout_right.addWidget(coolent_button)
+        bottom_layout_right.addWidget(air_filter_button)
+        bottom_layout_right.addWidget(brake_system_button)
+        bottom_layout_right.addWidget(battery_button)
 
+        bottom_layout = qtw.QHBoxLayout()
+        
+        bottom_layout.addLayout(bottom_layout_left)
+        bottom_layout.addLayout(bottom_layout_right)
 
-
-
-
-
-
+        layout.addLayout(top_layout)
+        layout.addLayout(bottom_layout)
 
 
 if __name__ == '__main__':

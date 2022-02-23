@@ -31,7 +31,7 @@ class CheckList(qtw.QWidget):
         top_layout = qtw.QHBoxLayout()
         
         bottom_layout_right = qtw.QVBoxLayout()
-        bottom_layout_left = qtw.QVBoxLayout()
+        bottom_layout_left = qtw.QHBoxLayout()
         
         
         
@@ -48,7 +48,7 @@ class CheckList(qtw.QWidget):
         wrench_label = qtw.QLabel()
         wrench_label.setPixmap(wrench)
         
-        bottom_layout_left.addStretch()
+        #bottom_layout_left.addStretch()
         bottom_layout_left.addWidget(wrench_label)
         
         bottom_layout_right.addWidget(oil_button)
@@ -59,6 +59,7 @@ class CheckList(qtw.QWidget):
         bottom_layout_right.addWidget(air_filter_button)
         bottom_layout_right.addWidget(brake_system_button)
         bottom_layout_right.addWidget(battery_button)
+        
         
         
         # Create table view and set model
