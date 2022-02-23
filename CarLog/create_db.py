@@ -20,6 +20,8 @@ class CreateCarLogData:
     # Erase database contents so that there are not duplicates
     query.exec_("DROP TABLE maintenance")
     query.exec_("DROP TABLE gas")
+    query.exec_("DROP TABLE car")
+    query.exec_("DROP TABLE contacts")
     
     # Create maintenance table
     query.exec_("""CREATE TABLE maintenance (
@@ -77,6 +79,19 @@ class CreateCarLogData:
     query.exec_("""INSERT INTO car(Make, Model, Year)
                 VALUES('Ford', 'Mustang', '2006')
                 """)
+    
+    # Create the contacts
+    query.exec_("""CREATE TABLE contacts (
+                Location TEXT NOT NULL,
+                POC Text NOT NULL,
+                Number INTEGER NOT NULL)""")
+    
+    
+    query.exec_("""INSERT INTO contacts(Location, POC, Number)
+                VALUES('AAA', 'Customer Rep', '1-800-123-4567')
+                """)
+    
+    
 
     print("[INFO] Database successfully created.")
 

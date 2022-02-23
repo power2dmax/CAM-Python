@@ -31,7 +31,7 @@ class TableDisplay(qtw.QWidget):
             print("Unable to open data source file.")
             sys.exit(1) # Error code 1 - signifies error
             
-        tables_needed = {'maintenance'}
+        tables_needed = {'contacts'}
         tables_not_found = tables_needed - set(database.tables())
         if tables_not_found:
             QMessageBox.critical(None, 'Error',
@@ -41,7 +41,7 @@ class TableDisplay(qtw.QWidget):
     
     def createTable(self):
         model = qts.QSqlTableModel()
-        model.setTable('maintenance')
+        model.setTable('contacts')
 
         table_view = qtw.QTableView()
         table_view.setModel(model)

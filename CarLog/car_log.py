@@ -567,7 +567,8 @@ class Maintenance(qtw.QWidget):
             result = result + query.value(0)
         totalCost =str("%.2f" % (result))
                 
-        qtw.QMessageBox.information(self, 'Total Cost', 'The Total Maintenance Cost is: \n$' + totalCost)
+        qtw.QMessageBox.about(self, 'Total Cost',
+            'The Total Maintenance Cost is: \n$' + totalCost)
         
     def createTable(self):
         """
