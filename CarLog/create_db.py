@@ -29,14 +29,14 @@ class CreateCarLogData:
                 Description TEXT NOT NULL)""")
     
     query.exec_("""INSERT INTO maintenance(Date, Mileage, Cost, Description)
-                VALUES('2007-12-27', '7500', '35.33', 'Oil Change'),
-                ('2008-05-30', '9500', '125.12', 'Battery'),
-                ('2008-12-24', '11629', '35.33', 'Oil Change'),
-                ('2021-01-12', '22135', '35.33', 'Oil Change'),
-                ('2021-05-18', '24385', '12.21', 'Tire Rotation'),
-                ('2021-07-08', '25875', '35.33', 'Air Filter'),
-                ('2008-12-21', '26897', '35.33', 'Oil Change'),
-                ('2022-01-28', '107868', '125.12', 'Battery')
+                VALUES('12-27-2007', '7500', '35.33', 'Oil Change'),
+                ('05-30-2008', '9500', '125.12', 'Battery'),
+                ('12-24-2008', '11629', '35.33', 'Oil Change'),
+                ('01-12-2021', '22135', '35.33', 'Oil Change'),
+                ('05-18-2021', '24385', '12.21', 'Tire Rotation'),
+                ('07-08-2021', '25875', '35.33', 'Air Filter'),
+                ('12-21-2008', '26897', '35.33', 'Oil Change'),
+                ('01-28-2022', '107868', '125.12', 'Battery')
                 """)
     
     # Create gas table
@@ -67,6 +67,16 @@ class CreateCarLogData:
                 ('2021-05-24', '7.8', '18.32', '142')
                 """)
     
+    # Create the car table
+    query.exec_("""CREATE TABLE car (
+                Make TEXT NOT NULL,
+                Model Text NOT NULL,
+                Year INTEGER NOT NULL)""")
+    
+    
+    query.exec_("""INSERT INTO car(Make, Model, Year)
+                VALUES('Ford', 'Mustang', '2006')
+                """)
 
     print("[INFO] Database successfully created.")
 

@@ -1,17 +1,7 @@
 # car_log.py
 """
-1-27-22
 Program written in Python is used to track vehicle maintenance.
 This program uses PyQt5 for the UI and SQLite for the data.
-The user can enter the date, millage, and the maintenance performed.
-The user will also have the capability to delete a row
-
-2-14-22
-New and improved version of the original car maintenance log.
-Enhancements includes the ability to not only track maintenance
-but to also track gas. Additional updates includes the ability
-to change the color scheme through themes in the tool menu and
-a car payment calculator
 """
 
 import sys
@@ -32,7 +22,7 @@ class App(qtw.QMainWindow):
         
         self.setWindowTitle('Car Log')
         self.setWindowIcon(qtg.QIcon("icons/cam_2.png"))
-        self.resize(500, 650)
+        self.resize(500, 600)
         
         self.styleSheet()
         self.createActions()
@@ -42,7 +32,7 @@ class App(qtw.QMainWindow):
         self.setCentralWidget(self.mainWindow)
         
         self.show()
-        
+            
     def createActions(self):
         # Create the actions for the "Files Menu"
         self.add_row = qtw.QAction('Add Row', self)
@@ -470,45 +460,54 @@ class MainWindow(qtw.QWidget):
         super(qtw.QWidget, self).__init__(parent)
         layout = qtw.QVBoxLayout(self)
         
+        self.createConnection()
+        
         # Initialize tab screen
         tabs = qtw.QTabWidget()
         tab1 = Maintenance(self)
         tab2 = Gas(self)
-        #tab3 = CarInformation(self)
+        tab3 = CheckList(self)
         tabs.resize(300,200)
         
         # Add tabs
         
         tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
         tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
-        #tabs.addTab(tab3,"Information")
+        tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Check List")
         
         # Add tabs to widget
         layout.addWidget(tabs)
         self.setLayout(layout)
         
-        
-class CarInformation(qtw.QWidget):
-    
-    def __init__(self, parent):
-        super(qtw.QWidget, self).__init__(parent)
-        
-        layout = qtw.QVBoxLayout(self)
+    def createConnection(self):
+        self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
+        self.database.setDatabaseName("files/car_log.db")
 
-        
+        if not self.database.open():
+            print("Unable to open data source file.")
+            sys.exit(1) # Error code 1 - signifies error
+
+        # Check if the tables we need exist in the database
+        tables_needed = {'maintenance', 'gas', 'car'}
+        tables_not_found = tables_needed - set(self.database.tables())
+        if tables_not_found:
+            qtw.QMessageBox.critical(None, 'Error', f'The following tables are missing from the database: {tables_not_found}')
+            sys.exit(1) # Error code 1 - signifies error
+
+
 class Maintenance(qtw.QWidget):
     
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
         
         # Create first tab
-        self.createConnection()
         self.createTable()
         
         # setup the layout
-        layout = qtw.QVBoxLayout(self)
-        top_layout = qtw.QHBoxLayout(self)
-        bottom_layout = qtw.QHBoxLayout(self)
+        layout = qtw.QVBoxLayout()
+        self.setLayout(layout)
+        top_layout = qtw.QHBoxLayout()
+        bottom_layout = qtw.QHBoxLayout()
         
         add_row = qtw.QPushButton("Add Row")
         add_row.setIcon(qtg.QIcon("icons/add_row.png"))
@@ -570,21 +569,6 @@ class Maintenance(qtw.QWidget):
                 
         qtw.QMessageBox.information(self, 'Total Cost', 'The Total Maintenance Cost is: \n$' + totalCost)
         
-    def createConnection(self):
-        self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-        self.database.setDatabaseName("files/car_log.db")
-
-        if not self.database.open():
-            print("Unable to open data source file.")
-            sys.exit(1) # Error code 1 - signifies error
-
-        # Check if the tables we need exist in the database
-        tables_needed = {'maintenance'}
-        tables_not_found = tables_needed - set(self.database.tables())
-        if tables_not_found:
-            qtw.QMessageBox.critical(None, 'Error', f'The following tables are missing from the database: {tables_not_found}')
-            sys.exit(1) # Error code 1 - signifies error
-
     def createTable(self):
         """
         Set up the model, headers and populate the model.
@@ -643,12 +627,12 @@ class Gas(qtw.QWidget):
         super(qtw.QWidget, self).__init__(parent)
         
         # Create first tab
-        self.createConnection()
         self.createTable()
         
-        layout = qtw.QVBoxLayout(self)
-        top_layout = qtw.QHBoxLayout(self)
-        bottom_layout = qtw.QHBoxLayout(self)
+        layout = qtw.QVBoxLayout()
+        self.setLayout(layout)
+        top_layout = qtw.QHBoxLayout()
+        bottom_layout = qtw.QHBoxLayout()
         
         add_row = qtw.QPushButton("Add Row")
         add_row.setIcon(qtg.QIcon("icons/add_row.png"))
@@ -725,22 +709,7 @@ class Gas(qtw.QWidget):
                 
         # Populate the model with data
         self.model.select()
-        
-    def createConnection(self):
-        self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-        self.database.setDatabaseName("files/car_log.db")
-
-        if not self.database.open():
-            print("Unable to open data source file.")
-            sys.exit(1) # Error code 1 - signifies error
-
-        # Check if the tables we need exist in the database
-        tables_needed = {'gas'}
-        tables_not_found = tables_needed - set(self.database.tables())
-        if tables_not_found:
-            qtw.QMessageBox.critical(None, 'Error', f'The following tables are missing from the database: {tables_not_found}')
-            sys.exit(1) # Error code 1 - signifies error
-        
+            
     def addRow(self):
         """
         Add a new record to the last row of the table
@@ -762,6 +731,24 @@ class Gas(qtw.QWidget):
         for index in current_item:
             self.model.removeRow(index.row())
         self.model.select()
+        
+        
+class CheckList(qtw.QWidget):
+    
+    def __init__(self, parent):
+        super(qtw.QWidget, self).__init__(parent)
+        
+        layout = qtw.QVBoxLayout(self)
+        top_layout = qtw.QHBoxLayout
+        make_label = qtw
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
