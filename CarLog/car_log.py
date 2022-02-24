@@ -21,7 +21,7 @@ class App(qtw.QMainWindow):
     def initializeUI(self):
         
         self.setWindowTitle('Car Log')
-        self.setWindowIcon(qtg.QIcon("icons/cam_2.png"))
+        self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
         self.resize(500, 600)
         
         self.styleSheet()
@@ -135,7 +135,7 @@ class App(qtw.QMainWindow):
         "maintence and fuel. Users are also able to \n" \
         "change the color scheme through themes in\n" \
         "the Tool Menu based on their prefrences\n\n" \
-        "             Written by CAM: 2022"
+        "Written by CAM: 2022"
         qtw.QMessageBox.about(self, "CAM's Car Log", text)
             
     def defaultStyleSheet(self):
@@ -189,11 +189,15 @@ class App(qtw.QMainWindow):
         
     def meshStyleSheet(self):
         stylesheet = """
-        QMainWindow, QMessageBox {
+        QMainWindow, QMessageBox, QDialog {
             background: url(images/mesh.png)
         }
         QTableView {
             background: lightgray
+        }
+        QCheckBox{
+            color: white;
+            font: bold 12px
         }
         QLabel {
             color: white;
@@ -213,14 +217,18 @@ class App(qtw.QMainWindow):
         }
         QLabel {
             color: white;
-            font: bold
+            font: bold 12px
         }
         QTableView, QMessageBox, QComboBox, QPushButton  {
             background: url(images/light_blue_steel.png)
         }
         QPushButton:hover {
             background: lightblue
-        }     
+        }
+        QCheckBox{
+            color: white;
+            font: bold 12px
+        }
         QTableView {
             selection-background-color: qlineargradient(x1: 0, y1: 0, x2: 0.75, y2: 0.75,
             stop: 0 #2E97AC, stop: 1 #C6E4E7)
@@ -241,7 +249,6 @@ class App(qtw.QMainWindow):
         QMenuBar::item:pressed {
             background: #888888;
         }
-        
         QTabWidget::pane { /* The tab widget frame */
             border-top: 2px solid #C2C7CB;
         }
@@ -276,7 +283,7 @@ class App(qtw.QMainWindow):
         }
         QDialog QLabel {
             color: white;
-            font: bold 10px
+            font: bold 12px
         }
         QStatusBar {
             color: white;
@@ -301,7 +308,6 @@ class App(qtw.QMainWindow):
         """
         self.setStyleSheet(stylesheet)
     
-    
     def southWestStyleSheet(self):
         stylesheet = """
         QMainWindow {
@@ -313,6 +319,10 @@ class App(qtw.QMainWindow):
             font: bold 14px
         }
         QLabel {
+            color: white;
+            font: bold 12px
+        }
+        QCheckBox{
             color: white;
             font: bold 12px
         }
@@ -353,7 +363,7 @@ class PaymentCalculator(qtw.QDialog):
         loan_label = qtw.QLabel("Amount:", self)
         loan_label.setFont(qtg.QFont('Arial', 10))
         
-        self.amount = qtw.QLineEdit(self)
+        self.amount = qtw.QLineEdit(self, placeholderText='$')
         self.amount.setValidator(qtg.QIntValidator())
         self.amount.setAlignment(qtc.Qt.AlignCenter)
         self.amount.setFont(qtg.QFont('Arial', 10))
@@ -363,7 +373,7 @@ class PaymentCalculator(qtw.QDialog):
         years_label.setFont(qtg.QFont('Arial', 10))
   
         # creating a QLineEdit object to get the years
-        self.years = qtw.QLineEdit(self)
+        self.years = qtw.QLineEdit(self, placeholderText='Years')
         self.years.setValidator(qtg.QIntValidator())
         self.years.setAlignment(qtc.Qt.AlignCenter)
         self.years.setFont(qtg.QFont('Arial', 10))
@@ -372,7 +382,7 @@ class PaymentCalculator(qtw.QDialog):
         interest_label.setFont(qtg.QFont('Arial', 10))
   
         # creating a QLineEdit object to get the interest
-        self.rate = qtw.QLineEdit(self)
+        self.rate = qtw.QLineEdit(self, placeholderText='%')
         self.rate.setValidator(qtg.QIntValidator())
         self.rate.setAlignment(qtc.Qt.AlignCenter)
         self.rate.setFont(qtg.QFont('Arial', 10))
@@ -389,7 +399,7 @@ class PaymentCalculator(qtw.QDialog):
                                      "border : 1px solid black;"
                                      "background : lightgray;"
                                      "}")
-        self.monthly_payment.setFont(qtg.QFont('Arial', 10))
+        self.monthly_payment.setFont(qtg.QFont('Arial', 10, qtg.QFont.Bold))
   
         # creating a label to show monthly payment
         self.total_payment = qtw.QLabel(self)
@@ -401,7 +411,7 @@ class PaymentCalculator(qtw.QDialog):
                                      "border : 1px solid black;"
                                      "background : lightgray;"
                                      "}")
-        self.total_payment.setFont(qtg.QFont('Arial', 10))
+        self.total_payment.setFont(qtg.QFont('Arial', 10, qtg.QFont.Bold))
         
         exitButton = qtw.QPushButton('Exit', self)
         exitButton.clicked.connect(self.close)
@@ -470,10 +480,9 @@ class MainWindow(qtw.QWidget):
         tabs.resize(300,200)
         
         # Add tabs
-        
         tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
         tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
-        tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Check List")
+        tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Checklist")
         
         # Add tabs to widget
         layout.addWidget(tabs)
@@ -503,7 +512,7 @@ class Maintenance(qtw.QWidget):
         # Create first tab
         self.createTable()
         
-        # setup the layout
+        # setup the overall layout
         layout = qtw.QVBoxLayout()
         self.setLayout(layout)
         top_layout = qtw.QHBoxLayout()
@@ -748,15 +757,18 @@ class CheckList(qtw.QWidget):
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
         
+        self.createCarTable()
+        self.createContactTable()
+        
+        
         layout = qtw.QVBoxLayout()
         self.setLayout(layout)
         top_layout = qtw.QVBoxLayout()
         
-        title = qtw.QLabel("Maintenance Checklist Items")
+        title = qtw.QLabel("Checklist")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
-        
-        top_layout.addWidget(title, qtc.Qt.AlignLeft)
+        top_layout.addWidget(title)
         
         bottom_layout_right = qtw.QVBoxLayout()
         bottom_layout_left = qtw.QHBoxLayout()
@@ -770,7 +782,7 @@ class CheckList(qtw.QWidget):
         brake_system_button = qtw.QCheckBox("Braking System")
         battery_button = qtw.QCheckBox("Battery")
         
-        wrench = qtg.QPixmap("images/wrench.png")
+        wrench = qtg.QPixmap("images/wrench_2.png")
         wrench_label = qtw.QLabel()
         wrench_label.setPixmap(wrench)
         
@@ -785,14 +797,64 @@ class CheckList(qtw.QWidget):
         bottom_layout_right.addWidget(air_filter_button)
         bottom_layout_right.addWidget(brake_system_button)
         bottom_layout_right.addWidget(battery_button)
-
+       
+        # Create table view and set model
+        self.car_table_view = qtw.QTableView()
+        header = self.car_table_view.horizontalHeader()
+        self.car_table_view.setModel(self.model)
+        header.setStretchLastSection(True)
+        self.car_table_view.setSelectionMode(qtw.QTableView.SingleSelection)
+        self.car_table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
+        
+        self.contact_table_view = qtw.QTableView()
+        header = self.contact_table_view.horizontalHeader()
+        self.contact_table_view.setModel(self.model_1)
+        header.setStretchLastSection(True)
+        self.contact_table_view.setSelectionMode(qtw.QTableView.SingleSelection)
+        self.contact_table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
+        
         bottom_layout = qtw.QHBoxLayout()
         
         bottom_layout.addLayout(bottom_layout_left)
         bottom_layout.addLayout(bottom_layout_right)
 
         layout.addLayout(top_layout)
+        layout.addWidget(self.car_table_view)
+        layout.addWidget(self.contact_table_view)
         layout.addLayout(bottom_layout)
+        
+    def createCarTable(self):
+        """
+        Set up the model, headers and populate the model.
+        """
+        self.model = qts.QSqlRelationalTableModel()
+        
+        self.model.setTable('car')
+        self.model.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
+        self.model.setHeaderData(self.model.fieldIndex('Make'), qtc.Qt.Horizontal, "Make")
+        self.model.setHeaderData(self.model.fieldIndex('Model'), qtc.Qt.Horizontal, "Model")
+        self.model.setHeaderData(self.model.fieldIndex('Year'), qtc.Qt.Horizontal, "Year")
+        
+        
+        # Populate the model with data
+        self.model.select()     
+        
+    def createContactTable(self):
+        """
+        Set up the model, headers and populate the model.
+        """
+        self.model_1 = qts.QSqlRelationalTableModel()
+        
+        self.model_1.setTable('contacts')
+        self.model_1.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
+        self.model_1.setHeaderData(self.model.fieldIndex('Location'), qtc.Qt.Horizontal, "Location")
+        self.model_1.setHeaderData(self.model.fieldIndex('POC'), qtc.Qt.Horizontal, "POC")
+        self.model_1.setHeaderData(self.model.fieldIndex('Number'), qtc.Qt.Horizontal, "Number")
+        
+        
+        # Populate the model with data
+        self.model_1.select()     
+        
 
 
 if __name__ == '__main__':
