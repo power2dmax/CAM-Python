@@ -49,7 +49,7 @@ class Graph(qtw.QMainWindow):
             date.append(query.value(0))
             
         sc = MplCanvas(self, width=5, height=4, dpi=100)
-        sc.axes.plot(price)
+        sc.axes.plot(date, price)
         self.setCentralWidget(sc)
         
         toolbar = NavigationToolbar(sc, self)

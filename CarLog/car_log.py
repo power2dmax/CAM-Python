@@ -5,6 +5,7 @@ This program uses PyQt5 for the UI and SQLite for the data.
 """
 
 import sys
+import numpy as np
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
@@ -12,6 +13,12 @@ from PyQt5 import QtGui as qtg
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+
+import matplotlib
+matplotlib.use('Qt5Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+
 
 class App(qtw.QMainWindow):
 
@@ -861,29 +868,55 @@ class CheckList(qtw.QWidget):
         self.model_1.select()     
         
 class Graphs(qtw.QMainWindow):
+    
     def __init__(self, parent):
         super(qtw.QMainWindow, self).__init__(parent)
         
-        mainwidget = qtw.QWidget()
-        self.setCentralWidget(mainwidget)
-        mainwidget.setLayout(qtw.QVBoxLayout())
-        
-        self.graphWidget = pg.PlotWidget()
-        
-        result = []
+        price = []
         query = QSqlQuery("SELECT Cost FROM gas")
         while query.next():
-            result.append(query.value(0))
-        print(result)
+            price.append(query.value(0))
+            
+        date = []
+        query = QSqlQuery("SELECT Date FROM gas")
+        while query.next():
+            date.append(query.value(0))
+            
+        sc = MplCanvas(self, width=5, height=4, dpi=100)
+        sc.axes.plot(price)
+        self.setCentralWidget(sc)
         
-        self.graphWidget.plot(result)
+        toolbar = NavigationToolbar(sc, self)
+        #ax = MplCanvas(self, width=5, height=4, dpi=100)
+        #ax = plt.subplots()
+        #ax.axes.plot(x, y)
+        #plt.show()
+        #self.setCentralWidget(ax)
+        
+        #toolbar = NavigationToolbar(ax, self)
         
         title = qtw.QLabel('Gas Prices')
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
+
+        layout = qtw.QVBoxLayout()
+        layout.addWidget(title)
+        layout.addWidget(toolbar)
+        layout.addWidget(sc)
         
-        mainwidget.layout().addWidget(title)
-        mainwidget.layout().addWidget(self.graphWidget)       
+        widget = qtw.QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
+
+        self.show()
+        
+        
+class MplCanvas(FigureCanvasQTAgg):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
         
 
 if __name__ == '__main__':
