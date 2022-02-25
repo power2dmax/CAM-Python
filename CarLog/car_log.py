@@ -10,8 +10,6 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-from pyqtgraph import PlotWidget, plot
-import pyqtgraph as pg
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 import matplotlib
