@@ -9,6 +9,8 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
 class App(qtw.QMainWindow):
@@ -477,12 +479,14 @@ class MainWindow(qtw.QWidget):
         tab1 = Maintenance(self)
         tab2 = Gas(self)
         tab3 = CheckList(self)
+        tab4 = Graphs(self)
         tabs.resize(300,200)
         
         # Add tabs
         tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
         tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
         tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Checklist")
+        tabs.addTab(tab4, qtg.QIcon("icons/graphs.png"), "Graphs")
         
         # Add tabs to widget
         layout.addWidget(tabs)
@@ -663,6 +667,7 @@ class Gas(qtw.QWidget):
         title.setStyleSheet("font: bold 24px")
         
         # Calculate the MPG and display on the bottom of the table
+        n = 0
         result = 0
         gasQuery = QSqlQuery("SELECT Gallons FROM gas")
         while gasQuery.next():
@@ -855,7 +860,31 @@ class CheckList(qtw.QWidget):
         # Populate the model with data
         self.model_1.select()     
         
-
+class Graphs(qtw.QMainWindow):
+    def __init__(self, parent):
+        super(qtw.QMainWindow, self).__init__(parent)
+        
+        mainwidget = qtw.QWidget()
+        self.setCentralWidget(mainwidget)
+        mainwidget.setLayout(qtw.QVBoxLayout())
+        
+        self.graphWidget = pg.PlotWidget()
+        
+        result = []
+        query = QSqlQuery("SELECT Cost FROM gas")
+        while query.next():
+            result.append(query.value(0))
+        print(result)
+        
+        self.graphWidget.plot(result)
+        
+        title = qtw.QLabel('Gas Prices')
+        title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
+        title.setStyleSheet("font: bold 24px")
+        
+        mainwidget.layout().addWidget(title)
+        mainwidget.layout().addWidget(self.graphWidget)       
+        
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
