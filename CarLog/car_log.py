@@ -609,12 +609,6 @@ class Maintenance(qtw.QWidget):
         """
         last_row = self.model.rowCount()
         self.model.insertRow(last_row)
-
-        id = 0
-        query = qts.QSqlQuery()
-        query.exec_("SELECT MAX (id) FROM maintenance")
-        if query.next():
-            id = int(query.value(0))
             
     def deleteRow(self):
         """
@@ -696,20 +690,24 @@ class Gas(qtw.QWidget):
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
         # Calculate the total cost of the maintenance performed by adding the results in the costs column
-        calculate_fuel = qtw.QPushButton('Calculate Fuel Economy')
+        calculate_fuel = qtw.QPushButton('Last Fuel Economy')
         calculate_fuel.clicked.connect(self.calculateFuelEcon)
         calculate_fuel.setIcon(qtg.QIcon("icons/calc.png"))
+        
+        calculate_total_fuel = qtw.QPushButton('Total Fuel Economy')
+        calculate_total_fuel.clicked.connect(self.calculateTotalFuelEcon)
+        calculate_total_fuel.setIcon(qtg.QIcon("icons/calc.png"))
+        
         bottom_layout.addWidget(calculate_fuel)
+        bottom_layout.addWidget(calculate_total_fuel)
         bottom_layout.addStretch()
-                
+        
         # Set the overall layout
         layout.addLayout(top_layout)
         layout.addWidget(self.table_view)
         layout.addLayout(bottom_layout)
         
     def calculateFuelEcon(self):
-        n = 0
-        result = 0
         gasQuery = QSqlQuery("SELECT Gallons FROM gas")
         while gasQuery.next():
             gasUsed = int(gasQuery.value(0))
@@ -718,9 +716,29 @@ class Gas(qtw.QWidget):
             mileUsed = int(mileQuery.value(0))
         mpg = ("%.2f" % (mileUsed/gasUsed))
         
-        qtw.QMessageBox.about(self, 'Fuel Econmoy',
+        qtw.QMessageBox.about(self, 'Fuel Economoy',
             'The Fuel Econmy from last fill up is: \n' + mpg + ' mpg')
         
+    def calculateTotalFuelEcon(self):
+        n = 0
+        gasUsed = 0
+        mileUsed = 0
+        gasQuery = QSqlQuery("SELECT Gallons FROM gas")
+        while gasQuery.next():
+            gasUsed = gasUsed + int(gasQuery.value(0))
+            n += 1
+        mileQuery = QSqlQuery("SELECT Odometer_Reading FROM gas")
+        while mileQuery.next():
+            mileUsed = mileUsed + int(mileQuery.value(0))
+        mpg = ("%.2f" % (mileUsed/gasUsed))
+        print(gasUsed)
+        print(mileUsed)
+        print(n)
+        
+        
+        qtw.QMessageBox.about(self, 'Fuel Econmoy',
+            'The Overall Fuel Economy is: \n' + mpg + ' mpg')
+    
     def createTable(self):
         """
         Set up the model, headers and populate the model.
@@ -742,12 +760,6 @@ class Gas(qtw.QWidget):
         """
         last_row = self.model.rowCount()
         self.model.insertRow(last_row)
-
-        id = 0
-        query = qts.QSqlQuery()
-        query.exec_("SELECT MAX (id) FROM gas")
-        if query.next():
-            id = int(query.value(0))
             
     def deleteRow(self):
         """
