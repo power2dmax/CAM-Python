@@ -11,4 +11,4 @@ in suppport of making the program user friendly and functional.
 
 Programs
 ++++++++++++++++++
-car_log.py -This program utilizes the Python modules; PyQt5 and SQLite.
+car_log.py -This program utilizes the Python modules; PyQt5, SQLite, and matplotlib.
