@@ -49,7 +49,7 @@ class CreateCarLogData:
                 Odometer_Reading INTEGER NOT NULL)""")
 
     query.exec_("""INSERT INTO gas(Date, Gallons, Cost, Odometer_Reading)
-                VALUES('2021-01-21', '12', '23.75', '220'),
+                VALUES('01-21-2021', '12', '23.75', '220'),
                 ('01-17-2021', '11.0', '22.63', '188'),
                 ('01-24-2021', '9.0', '21.05', '175'),
                 ('02-12-2021', '8.2', '18.44', '117'),

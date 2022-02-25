@@ -671,24 +671,6 @@ class Gas(qtw.QWidget):
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
         
-        # Calculate the MPG and display on the bottom of the table
-        n = 0
-        result = 0
-        gasQuery = QSqlQuery("SELECT Gallons FROM gas")
-        while gasQuery.next():
-            gasUsed = int(gasQuery.value(0))
-        mileQuery = QSqlQuery("SELECT Odometer_Reading FROM gas")
-        while mileQuery.next():
-            mileUsed = int(mileQuery.value(0))
-        mpg = ("%.2f" % (mileUsed/gasUsed))
-        
-        avgMpgText = qtw.QLabel("Your Latest Fuel Economy is:")
-        avgMpgText.setFont(qtg.QFont('Arial', 9))
-        avgMpgCalc = qtw.QLabel(mpg)
-        avgMpgCalc.setFont(qtg.QFont('Arial', 9))
-        mpgText = qtw.QLabel("MPG")
-        mpgText.setFont(qtg.QFont('Arial', 9))
-        
         # Setting up the top layout, gonna have to layer this to get
         #the gas gauge image to show properly
         top_layout = qtw.QHBoxLayout()
@@ -704,12 +686,6 @@ class Gas(qtw.QWidget):
         top_right_layout.addStretch()
         top_layout.addLayout(top_left_layout)
         top_layout.addLayout(top_right_layout)
-        
-        # Set up the bottom layout
-        bottom_layout.addWidget(avgMpgText)
-        bottom_layout.addWidget(avgMpgCalc)
-        bottom_layout.addWidget(mpgText)
-        bottom_layout.addStretch()
                 
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -719,10 +695,31 @@ class Gas(qtw.QWidget):
         self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
         self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
-        #layout.addWidget(title, qtc.Qt.AlignLeft)
+        # Calculate the total cost of the maintenance performed by adding the results in the costs column
+        calculate_fuel = qtw.QPushButton('Calculate Fuel Economy')
+        calculate_fuel.clicked.connect(self.calculateFuelEcon)
+        calculate_fuel.setIcon(qtg.QIcon("icons/calc.png"))
+        bottom_layout.addWidget(calculate_fuel)
+        bottom_layout.addStretch()
+                
+        # Set the overall layout
         layout.addLayout(top_layout)
         layout.addWidget(self.table_view)
-        layout.addLayout(bottom_layout)        
+        layout.addLayout(bottom_layout)
+        
+    def calculateFuelEcon(self):
+        n = 0
+        result = 0
+        gasQuery = QSqlQuery("SELECT Gallons FROM gas")
+        while gasQuery.next():
+            gasUsed = int(gasQuery.value(0))
+        mileQuery = QSqlQuery("SELECT Odometer_Reading FROM gas")
+        while mileQuery.next():
+            mileUsed = int(mileQuery.value(0))
+        mpg = ("%.2f" % (mileUsed/gasUsed))
+        
+        qtw.QMessageBox.about(self, 'Fuel Econmoy',
+            'The Fuel Econmy from last fill up is: \n' + mpg + ' mpg')
         
     def createTable(self):
         """
@@ -824,13 +821,12 @@ class CheckList(qtw.QWidget):
         self.contact_table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
         
         bottom_layout = qtw.QHBoxLayout()
-        
         bottom_layout.addLayout(bottom_layout_left)
         bottom_layout.addLayout(bottom_layout_right)
 
         layout.addLayout(top_layout)
-        layout.addWidget(self.car_table_view)
-        layout.addWidget(self.contact_table_view)
+        #layout.addWidget(self.car_table_view)
+        #layout.addWidget(self.contact_table_view)
         layout.addLayout(bottom_layout)
         
     def createCarTable(self):
