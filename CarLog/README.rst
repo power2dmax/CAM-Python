@@ -24,7 +24,7 @@ Several files support the car_log program
 - car_log_layout.pptx (under files)
 	Used for originial concept of the layout of the PyQt widgets
 - create_db.py
-	Used to create the database used for the car_log program
+	Used to create the database used for the car_log.py program
 - read_db.py
 	Used to review the database ensuring that it was created correctly
 
