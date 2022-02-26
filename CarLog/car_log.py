@@ -438,17 +438,14 @@ class PaymentCalculator(qtw.QDialog):
           
     def calculate_action(self):
         annualInterestRate = self.rate.text()
-  
         if len(annualInterestRate) == 0 or annualInterestRate == '0':
             return
         
         numberOfYears = self.years.text()
-  
         if len(numberOfYears) == 0 or numberOfYears == '0':
             return
 
         loanAmount = self.amount.text()
-  
         if len(loanAmount) == 0 or loanAmount == '0':
             return
   
@@ -731,11 +728,6 @@ class Gas(qtw.QWidget):
         while mileQuery.next():
             mileUsed = mileUsed + int(mileQuery.value(0))
         mpg = ("%.2f" % (mileUsed/gasUsed))
-        print(gasUsed)
-        print(mileUsed)
-        print(n)
-        
-        
         qtw.QMessageBox.about(self, 'Fuel Econmoy',
             'The Overall Fuel Economy is: \n' + mpg + ' mpg')
     
@@ -872,7 +864,7 @@ class CheckList(qtw.QWidget):
         
         # Populate the model with data
         self.model_1.select()     
-        
+
 class Graphs(qtw.QMainWindow):
     
     def __init__(self, parent):
