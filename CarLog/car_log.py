@@ -28,7 +28,7 @@ class App(qtw.QMainWindow):
         
         self.setWindowTitle('Car Log')
         self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
-        self.resize(500, 600)
+        self.resize(500, 650)
         
         self.styleSheet()
         self.createActions()
@@ -500,7 +500,7 @@ class MainWindow(qtw.QWidget):
             sys.exit(1) # Error code 1 - signifies error
 
         # Check if the tables we need exist in the database
-        tables_needed = {'maintenance', 'gas', 'car'}
+        tables_needed = {'maintenance', 'gas'}
         tables_not_found = tables_needed - set(self.database.tables())
         if tables_not_found:
             qtw.QMessageBox.critical(None, 'Error', f'The following tables are missing from the database: {tables_not_found}')
