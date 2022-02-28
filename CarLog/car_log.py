@@ -481,14 +481,14 @@ class MainWindow(qtw.QWidget):
         tab1 = Maintenance(self)
         tab2 = Gas(self)
         tab3 = CheckList(self)
-        tab4 = Graphs(self)
+        #tab4 = Graphs(self)
         tabs.resize(300,200)
         
         # Add tabs
         tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
         tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
         tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Checklist")
-        tabs.addTab(tab4, qtg.QIcon("icons/graphs.png"), "Graphs")
+        #tabs.addTab(tab4, qtg.QIcon("icons/graphs.png"), "Graphs")
         
         # Add tabs to widget
         layout.addWidget(tabs)
@@ -768,103 +768,74 @@ class CheckList(qtw.QWidget):
     def __init__(self, parent):
         super(qtw.QWidget, self).__init__(parent)
         
-        self.createCarTable()
-        self.createContactTable()
-        
-        
         layout = qtw.QVBoxLayout()
         self.setLayout(layout)
         top_layout = qtw.QVBoxLayout()
         
-        title = qtw.QLabel("Checklist")
+        title = qtw.QLabel("Maintenance Checklist")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
+        
+        text = "While performing regular maintenance, there are several things\n" \
+               "to consider when maintaining your vehicle. First, you should not\n" \
+                "only keep up on it regularly so it doesn't break down or cause\n" \
+                "serious issues down the road, but you might also find way of\n" \
+                "improving your vehicle's overall performance as well as maintianing\n" \
+                "if not improving fuel economyat the same time. This checklist covers\n" \
+                "all the major items you need to be mindful of as you continue to\n" \
+                "to take care of your vehicle while you put miles on it."
+        language = qtw.QLabel(text)
+        language.setFont(qtg.QFont('Arial', 11))
+        
         top_layout.addWidget(title)
+        top_layout.addWidget(language)
         
         bottom_layout_right = qtw.QVBoxLayout()
-        bottom_layout_left = qtw.QHBoxLayout()
+        bottom_layout_left = qtw.QVBoxLayout()
         
-        oil_button = qtw.QCheckBox("Oil")
-        hoses_button = qtw.QCheckBox("Hoses")
-        belts_button = qtw.QCheckBox("Belts")
-        tp_button = qtw.QCheckBox("Tire Pressure")
-        coolent_button = qtw.QCheckBox("Coolent")
-        air_filter_button = qtw.QCheckBox("Air Filter")
-        brake_system_button = qtw.QCheckBox("Braking System")
-        battery_button = qtw.QCheckBox("Battery")
+        oil_button = qtw.QCheckBox         ("Oil - Synthetic oils can go further than conventional oils, consider premium\n" \
+                                            "brand oils to reduce wear and friction")
+        hoses_button = qtw.QCheckBox       ("Hoses -  Check your hoses at the clamps for integrity and brittleness")
+        belts_button = qtw.QCheckBox       ("Belts - Belts need to be checked before being replaced at 150,000 miles")
+        tp_button = qtw.QCheckBox          ("Tire Pressure - Maintain proper inflation levels to insure maximum performance.\n" \
+                                           "Never settle and buy cheap tires")
+        coolent_button = qtw.QCheckBox     ("Coolent - At 30,000 miles the levels and integrity should be checked")
+        air_filter_button = qtw.QCheckBox  ("Air Filter - Stock filters are paper, and replacing it with an aftermarket \n" \
+                                            "panel filter can allow your engine to breathe better")
+        brake_system_button = qtw.QCheckBox("Braking - Check brakes annualy yearly, in addition to rotors and \n" \
+                                            "brake fluid")
+        spark_plug_button = qtw.QCheckBox  ("Spark Plugs - Spark plugs should be checked every 30,000 miles, and if your engine\n" \
+                                            "is supercharged, they should be checked yearly")
+        battery_button = qtw.QCheckBox     ("Battery -  Check battery connections and clean if necessary")
+        shocks_button = qtw.QCheckBox      ("Shocks & Struts—For hard drivers, shocks and struts should be checked at \n" \
+                                           "80,000 miles at most")
         
         wrench = qtg.QPixmap("images/wrench_2.png")
         wrench_label = qtw.QLabel()
         wrench_label.setPixmap(wrench)
         
         #bottom_layout_left.addStretch()
-        bottom_layout_left.addWidget(wrench_label)
+        bottom_layout_right.addWidget(wrench_label)
         
-        bottom_layout_right.addWidget(oil_button)
-        bottom_layout_right.addWidget(hoses_button)
-        bottom_layout_right.addWidget(belts_button)
-        bottom_layout_right.addWidget(tp_button)
-        bottom_layout_right.addWidget(coolent_button)
-        bottom_layout_right.addWidget(air_filter_button)
-        bottom_layout_right.addWidget(brake_system_button)
-        bottom_layout_right.addWidget(battery_button)
-       
-        # Create table view and set model
-        self.car_table_view = qtw.QTableView()
-        header = self.car_table_view.horizontalHeader()
-        self.car_table_view.setModel(self.model)
-        header.setStretchLastSection(True)
-        self.car_table_view.setSelectionMode(qtw.QTableView.SingleSelection)
-        self.car_table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
-        
-        self.contact_table_view = qtw.QTableView()
-        header = self.contact_table_view.horizontalHeader()
-        self.contact_table_view.setModel(self.model_1)
-        header.setStretchLastSection(True)
-        self.contact_table_view.setSelectionMode(qtw.QTableView.SingleSelection)
-        self.contact_table_view.setSelectionBehavior(qtw.QTableView.SelectRows)
+        bottom_layout_left.addWidget(oil_button)
+        bottom_layout_left.addWidget(hoses_button)
+        bottom_layout_left.addWidget(belts_button)
+        bottom_layout_left.addWidget(tp_button)
+        bottom_layout_left.addWidget(coolent_button)
+        bottom_layout_left.addWidget(air_filter_button)
+        bottom_layout_left.addWidget(brake_system_button)
+        bottom_layout_left.addWidget(spark_plug_button)
+        bottom_layout_left.addWidget(battery_button)
+        bottom_layout_left.addWidget(shocks_button)
         
         bottom_layout = qtw.QHBoxLayout()
         bottom_layout.addLayout(bottom_layout_left)
         bottom_layout.addLayout(bottom_layout_right)
 
         layout.addLayout(top_layout)
-        #layout.addWidget(self.car_table_view)
-        #layout.addWidget(self.contact_table_view)
         layout.addLayout(bottom_layout)
         
-    def createCarTable(self):
-        """
-        Set up the model, headers and populate the model.
-        """
-        self.model = qts.QSqlRelationalTableModel()
-        
-        self.model.setTable('car')
-        self.model.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
-        self.model.setHeaderData(self.model.fieldIndex('Make'), qtc.Qt.Horizontal, "Make")
-        self.model.setHeaderData(self.model.fieldIndex('Model'), qtc.Qt.Horizontal, "Model")
-        self.model.setHeaderData(self.model.fieldIndex('Year'), qtc.Qt.Horizontal, "Year")
-        
-        
-        # Populate the model with data
-        self.model.select()     
-        
-    def createContactTable(self):
-        """
-        Set up the model, headers and populate the model.
-        """
-        self.model_1 = qts.QSqlRelationalTableModel()
-        
-        self.model_1.setTable('contacts')
-        self.model_1.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
-        self.model_1.setHeaderData(self.model.fieldIndex('Location'), qtc.Qt.Horizontal, "Location")
-        self.model_1.setHeaderData(self.model.fieldIndex('POC'), qtc.Qt.Horizontal, "POC")
-        self.model_1.setHeaderData(self.model.fieldIndex('Number'), qtc.Qt.Horizontal, "Number")
-        
-        
-        # Populate the model with data
-        self.model_1.select()     
-
+    
 class Graphs(qtw.QMainWindow):
     
     def __init__(self, parent):
