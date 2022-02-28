@@ -12,9 +12,8 @@ from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 
-import matplotlib
-matplotlib.use('Qt5Agg')
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT as NavigationToolbar
+
+from matplotlib.backends.backend_qtagg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
 
 
@@ -481,14 +480,12 @@ class MainWindow(qtw.QWidget):
         tab1 = Maintenance(self)
         tab2 = Gas(self)
         tab3 = CheckList(self)
-        #tab4 = Graphs(self)
         tabs.resize(300,200)
         
         # Add tabs
         tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Maintenance")
         tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Gas")
         tabs.addTab(tab3, qtg.QIcon("icons/check-list.png"), "Checklist")
-        #tabs.addTab(tab4, qtg.QIcon("icons/graphs.png"), "Graphs")
         
         # Add tabs to widget
         layout.addWidget(tabs)
@@ -695,8 +692,14 @@ class Gas(qtw.QWidget):
         calculate_total_fuel.clicked.connect(self.calculateTotalFuelEcon)
         calculate_total_fuel.setIcon(qtg.QIcon("icons/calc.png"))
         
+        gas_graph = qtw.QPushButton('Graph Gas')
+        gas_graph.clicked.connect(self.gasGraph)
+        gas_graph.setIcon(qtg.QIcon("icons/graphs.png"))
+        
         bottom_layout.addWidget(calculate_fuel)
         bottom_layout.addWidget(calculate_total_fuel)
+        bottom_layout.addStretch()
+        bottom_layout.addWidget(gas_graph)
         bottom_layout.addStretch()
         
         # Set the overall layout
@@ -761,6 +764,11 @@ class Gas(qtw.QWidget):
         for index in current_item:
             self.model.removeRow(index.row())
         self.model.select()
+        
+    def gasGraph(self):
+        graph = GasGraph(self)
+        graph.resize(350, 350)
+        graph.show()
         
         
 class CheckList(qtw.QWidget):
@@ -836,10 +844,10 @@ class CheckList(qtw.QWidget):
         layout.addLayout(bottom_layout)
         
     
-class Graphs(qtw.QMainWindow):
-    
+class GasGraph(qtw.QDialog):
+            
     def __init__(self, parent):
-        super(qtw.QMainWindow, self).__init__(parent)
+        super().__init__(parent)
         
         price = []
         query = QSqlQuery("SELECT Cost FROM gas")
@@ -850,43 +858,25 @@ class Graphs(qtw.QMainWindow):
         query = QSqlQuery("SELECT Date FROM gas")
         while query.next():
             date.append(query.value(0))
-            
-        sc = MplCanvas(self, width=5, height=4, dpi=100)
-        sc.axes.plot(price)
-        self.setCentralWidget(sc)
-        
-        toolbar = NavigationToolbar(sc, self)
-        #ax = MplCanvas(self, width=5, height=4, dpi=100)
-        #ax = plt.subplots()
-        #ax.axes.plot(x, y)
-        #plt.show()
-        #self.setCentralWidget(ax)
-        
-        #toolbar = NavigationToolbar(ax, self)
+
+        self.layout = qtw.QVBoxLayout()
+        self.static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.layout.addWidget(NavigationToolbar(self.static_canvas, self))
+
+        self._static_ax = self.static_canvas.figure.subplots()
+        t = np.linspace(0, 10, 501)
+        self._static_ax.plot(price)
         
         title = qtw.QLabel('Gas Prices')
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
-
-        layout = qtw.QVBoxLayout()
-        layout.addWidget(title)
-        layout.addWidget(toolbar)
-        layout.addWidget(sc)
+        exitButton = qtw.QPushButton('Exit', self)
+        exitButton.clicked.connect(self.close)
         
-        widget = qtw.QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
-
-        self.show()
-        
-        
-class MplCanvas(FigureCanvasQTAgg):
-
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
-        
+        self.layout.addWidget(title)
+        self.layout.addWidget(self.static_canvas)
+        self.layout.addWidget(exitButton)
+        self.setLayout(self.layout)
 
 if __name__ == '__main__':
     app = qtw.QApplication(sys.argv)
