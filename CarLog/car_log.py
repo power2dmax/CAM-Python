@@ -801,19 +801,19 @@ class CheckList(qtw.QWidget):
         bottom_layout_right = qtw.QVBoxLayout()
         bottom_layout_left = qtw.QVBoxLayout()
         
-        oil_button = qtw.QCheckBox         ("Oil - Synthetic oils can go further than conventional oils, consider premium\n" \
-                                            "brand oils to reduce wear and friction")
+        oil_button = qtw.QCheckBox         ("Oil - Synthetic oils can go further than conventional oils, also consider\n" \
+                                            "premium brand oils to reduce wear and friction")
         hoses_button = qtw.QCheckBox       ("Hoses -  Check your hoses at the clamps for integrity and brittleness")
         belts_button = qtw.QCheckBox       ("Belts - Belts need to be checked before being replaced at 150,000 miles")
-        tp_button = qtw.QCheckBox          ("Tire Pressure - Maintain proper inflation levels to insure maximum performance.\n" \
-                                           "Never settle and buy cheap tires")
+        tp_button = qtw.QCheckBox          ("Tire Pressure - By maintaining proper inflation levels will ensure maximum\n" \
+                                           "performance. Never settle and buy cheap tires")
         coolent_button = qtw.QCheckBox     ("Coolent - At 30,000 miles the levels and integrity should be checked")
         air_filter_button = qtw.QCheckBox  ("Air Filter - Stock filters are paper, and replacing it with an aftermarket \n" \
                                             "panel filter can allow your engine to breathe better")
         brake_system_button = qtw.QCheckBox("Braking - Check brakes annualy yearly, in addition to rotors and \n" \
                                             "brake fluid")
-        spark_plug_button = qtw.QCheckBox  ("Spark Plugs - Spark plugs should be checked every 30,000 miles, and if your engine\n" \
-                                            "is supercharged, they should be checked yearly")
+        spark_plug_button = qtw.QCheckBox  ("Spark Plugs - Spark plugs should be checked every 30,000 miles, and if\n" \
+                                            " your engine is supercharged, they should be checked yearly")
         battery_button = qtw.QCheckBox     ("Battery -  Check battery connections and clean if necessary")
         shocks_button = qtw.QCheckBox      ("Shocks & Struts—For hard drivers, shocks and struts should be checked at \n" \
                                            "80,000 miles at most")
@@ -870,7 +870,7 @@ class GasGraph(qtw.QDialog):
         title = qtw.QLabel('Gas Prices')
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
-        exitButton = qtw.QPushButton('Exit', self)
+        exitButton = qtw.QPushButton('Close Window', self)
         exitButton.clicked.connect(self.close)
         
         self.layout.addWidget(title)
