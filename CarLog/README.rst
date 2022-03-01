@@ -49,6 +49,12 @@ Notes:
 ==========
 None
 
-Screen Shots:
+Screen Shots: 
 ==========
-.. image:: screenshots.png
+.. image:: screenshots_01.png
+
+Screen Shots (Payment Calculator, Blue Theme, Mesh Theme):
+==========
+.. image:: screenshots_02.png
+
+
