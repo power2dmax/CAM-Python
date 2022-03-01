@@ -48,3 +48,7 @@ The car maintenance program has the following features:
 Notes:
 ==========
 None
+
+Screen Shots:
+==========
+.. image:: screensots
