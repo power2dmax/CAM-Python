@@ -51,4 +51,4 @@ None
 
 Screen Shots:
 ==========
-.. image:: screensots
+.. image:: screenshots
