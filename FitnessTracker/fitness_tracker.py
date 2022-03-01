@@ -20,11 +20,52 @@ class App(qtw.QMainWindow):
     def initializeUI(self):
         
         self.setWindowTitle('Fitness Tracker')
-        self.resize(1000, 650)
+        self.resize(1000, 750)
         
-        
+        self.menuWidget()
+        self.mainWindow = MainWindow(self)
+        self.setCentralWidget(self.mainWindow)
+                
         
         self.show()
+        
+    def menuWidget(self):
+        pass
+        
+        
+class MainWindow(qtw.QWidget):
+    
+    def __init__(self, parent):
+        super(qtw.QWidget, self).__init__(parent)
+        layout = qtw.QVBoxLayout(self)
+        
+                
+        # Initialize tab screen
+        tabs = qtw.QTabWidget(tabPosition=qtw.QTabWidget.West)
+        tab1 = Fitness(self)
+        tab2 = Calories(self)
+        tabs.resize(300,200)
+        
+        # Add tabs
+        tabs.addTab(tab1, qtg.QIcon("icons/wrench.png"), "Fitness")
+        tabs.addTab(tab2,qtg.QIcon("icons/gas.png"), "Calories")
+        
+        # Add tabs to widget
+        layout.addWidget(tabs)
+        self.setLayout(layout)
+        
+class Fitness(qtw.QWidget):
+        
+    def __init__(self, parent):
+        super(qtw.QWidget, self).__init__(parent)
+        pass
+
+
+class Calories(qtw.QWidget):
+    
+    def __init__(self, parent):
+        super(qtw.QWidget, self).__init__(parent)
+        pass
         
 
 if __name__ == '__main__':
