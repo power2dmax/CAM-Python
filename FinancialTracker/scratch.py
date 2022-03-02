@@ -7,7 +7,7 @@ msft = yf.Ticker("VASGX")
 #print(msft)
 #print(msft.history(period='3mo'))
 
-data = yf.download("VASGX", period = '1d', interval = '1m')
+data = yf.download("MSFT", period = '1d', interval = '1h')
 print(data)
 
 
