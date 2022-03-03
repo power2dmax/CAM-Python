@@ -39,9 +39,9 @@ class App(qtw.QMainWindow):
 
     def initializeUI(self):
         
-        self.setWindowTitle('Fitness Tracker')
+        self.setWindowTitle('Financial Tracker')
         self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
-        self.resize(1175, 750)
+        self.resize(1175, 650)
         
         self.createActions()
         self.menuWidget()
@@ -158,27 +158,30 @@ class Mortgage(qtw.QWidget):
         self.setLayout(layout)
         
         left_layout = qtw.QVBoxLayout()
-        left_top_layout = qtw.QHBoxLayout()
+        left_top_layout = qtw.QGridLayout()
         left_bottom_layout = qtw.QHBoxLayout()
+        
         right_layout = qtw.QVBoxLayout()
         
-        left_top_layout_left = qtw.QVBoxLayout()
-        left_top_layout_right = qtw.QVBoxLayout()
-        left_top_layout_middle = qtw.QVBoxLayout()
         
-        title = qtw.QLabel("Mortgage Balance")
+        title = qtw.QLabel("Mortgage")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
         
         balanceQuery = QSqlQuery("SELECT Balance FROM mortgage")
         while balanceQuery.next():
-            balanceFinal = str(balanceQuery.value(0))
+            balanceFinal = (balanceQuery.value(0))
         
-        balance_label = qtw.QLabel("Current Mortgage Balance")
-        balance_text = qtw.QLineEdit(balanceFinal)
+        balance_label = qtw.QLabel("Current Balance:")
+        balance_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(balanceFinal)))
         
-        value_label = qtw.QLabel("Current Market Value")
-        value_text = qtw.QLineEdit("450000")
+        est_value = int(450000)
+        value_label = qtw.QLabel("Current Value:")
+        value_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(est_value)))
+        
+        difference = est_value - int(balanceFinal)
+        diff_label = qtw.QLabel("Difference:")
+        diff_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(difference)))
         
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -206,20 +209,28 @@ class Mortgage(qtw.QWidget):
         del_row = qtw.QPushButton("Delete Row")
         del_row.setIcon(qtg.QIcon("icons/delete_row.png"))
         del_row.setStyleSheet("padding: 6px")
-        del_row.clicked.connect(self.deleteRow)
+        del_row.clicked.connect(self.deleteMessage)
         
+        totals_button = qtw.QPushButton("Totals")
+        totals_button.setIcon(qtg.QIcon("icons/totals.png"))
+        totals_button.setStyleSheet("padding: 6px")
+        totals_button.clicked.connect(self.totals)
+
+        left_top_layout.addWidget(balance_label, 0, 0)
+        left_top_layout.addWidget(balance_text, 1, 0)
+        left_top_layout.addWidget(value_label, 0, 1)
+        left_top_layout.addWidget(value_text, 1, 1)
+        left_top_layout.addWidget(diff_label, 0, 2)
+        left_top_layout.addWidget(diff_text, 1, 2)
+               
         left_bottom_layout.addWidget(add_row)
         left_bottom_layout.addWidget(del_row)
         left_bottom_layout.addStretch()
-        
-        left_top_layout_left.addWidget(balance_label)
-        left_top_layout_left.addWidget(balance_text)
-        left_top_layout_middle.addWidget(value_label)
-        left_top_layout_middle.addWidget(value_text)
+        left_bottom_layout.addWidget(totals_button)
+        left_bottom_layout.addStretch()
         
         left_layout.addWidget(title)
-        left_layout.addLayout(left_top_layout_left)
-        left_layout.addLayout(left_top_layout_middle)
+        left_layout.addLayout(left_top_layout)
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
@@ -233,7 +244,7 @@ class Mortgage(qtw.QWidget):
         self.graphWidget = pg.PlotWidget()
         self.graphWidget.setBackground('floralwhite')
         pen = pg.mkPen(color=(0, 0, 0), width=2)
-        self.graphWidget.setTitle("Mortgage Balance", color='b', size="20pt")
+        self.graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
         self.graphWidget.setLabel('left', 'Current Balance')
         self.graphWidget.setLabel('bottom', 'Number of Payments')
         self.graphWidget.setXRange(0, 360, padding=0)
@@ -253,7 +264,15 @@ class Mortgage(qtw.QWidget):
         layout.addLayout(left_layout)
         layout.addLayout(right_layout)
         
-        
+    def deleteMessage(self):
+        message = qtw.QMessageBox.question(self, 'Delete',
+            'This will perminatly delete the highlighted row(s). \n'
+            'The data will not be able to be retrived again. \n'
+            'Are you sure you want to delete?',
+            qtw.QMessageBox.Yes | qtw.QMessageBox.No)
+        if message == qtw.QMessageBox.Yes:
+            #self.database.close()
+            self.deleteRow()
         
     def createTable(self):
         """
@@ -284,6 +303,43 @@ class Mortgage(qtw.QWidget):
         for index in current_item:
             self.model.removeRow(index.row())
         self.model.select()
+        
+    def totals(self):
+        total_payment = 0
+        query = QSqlQuery("SELECT Payment FROM mortgage")
+        while query.next():
+            total_payment = total_payment + query.value(0)
+        totalPayment = str("%.2f" % (total_payment))
+        
+        total_additional = 0
+        query = QSqlQuery("SELECT Additional_Payment FROM mortgage")
+        while query.next():
+            total_additional = total_additional + query.value(0)
+        
+        total_principle = 0
+        query = QSqlQuery("SELECT Principle FROM mortgage")
+        while query.next():
+            total_principle = total_principle + query.value(0)
+        
+        totalPrinciple = str("%.2f" % (total_additional + total_principle))
+        
+        total_interest = 0
+        query = QSqlQuery("SELECT Interest FROM mortgage")
+        while query.next():
+            total_interest = total_interest + query.value(0)
+        totalInterest =str("%.2f" % (total_interest))
+        
+        total_escrow = 0
+        query = QSqlQuery("SELECT Escrow FROM mortgage")
+        while query.next():
+            total_escrow = total_escrow + query.value(0)
+        totalEscrow =str("%.2f" % (total_escrow))
+        
+        qtw.QMessageBox.about(self, 'Total Costs',                 
+            'The Total Payments made is: $ ' + totalPayment +
+            '\nThe Total Principle Paid is: $ ' + totalPrinciple +
+            '\nThe Total in Interest Paid is: $ ' + totalInterest +
+            '\nThe Total in Escrow Paid is: $ ' + totalEscrow)
 
 
 if __name__ == '__main__':
