@@ -91,7 +91,7 @@ class MainWindow(qtw.QWidget):
         tabs.addTab(tab2,qtg.QIcon("icons/cash.png"), "Checking")
         tabs.addTab(tab3, qtg.QIcon("icons/cash.png"), "Savings")
         tabs.addTab(tab4, qtg.QIcon("icons/cash.png"), "Retirement")
-        tabs.addTab(tab5, qtg.QIcon("icons/cash.png"), "Mortgage")
+        tabs.addTab(tab5, qtg.QIcon("icons/house.png"), "Mortgage")
         
         # Add tabs to widget
         layout.addWidget(tabs)
@@ -160,12 +160,25 @@ class Mortgage(qtw.QWidget):
         left_layout = qtw.QVBoxLayout()
         left_top_layout = qtw.QHBoxLayout()
         left_bottom_layout = qtw.QHBoxLayout()
+        right_layout = qtw.QVBoxLayout()
         
-        right_layout = qtw.QVBoxLayout()       
+        left_top_layout_left = qtw.QVBoxLayout()
+        left_top_layout_right = qtw.QVBoxLayout()
+        left_top_layout_middle = qtw.QVBoxLayout()
         
         title = qtw.QLabel("Mortgage Balance")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
+        
+        balanceQuery = QSqlQuery("SELECT Balance FROM mortgage")
+        while balanceQuery.next():
+            balanceFinal = str(balanceQuery.value(0))
+        
+        balance_label = qtw.QLabel("Current Mortgage Balance")
+        balance_text = qtw.QLineEdit(balanceFinal)
+        
+        value_label = qtw.QLabel("Current Market Value")
+        value_text = qtw.QLineEdit("450000")
         
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -191,7 +204,7 @@ class Mortgage(qtw.QWidget):
         add_row.clicked.connect(self.addRow)
         
         del_row = qtw.QPushButton("Delete Row")
-        del_row.setIcon(qtg.QIcon("icons/del_row.png"))
+        del_row.setIcon(qtg.QIcon("icons/delete_row.png"))
         del_row.setStyleSheet("padding: 6px")
         del_row.clicked.connect(self.deleteRow)
         
@@ -199,7 +212,14 @@ class Mortgage(qtw.QWidget):
         left_bottom_layout.addWidget(del_row)
         left_bottom_layout.addStretch()
         
+        left_top_layout_left.addWidget(balance_label)
+        left_top_layout_left.addWidget(balance_text)
+        left_top_layout_middle.addWidget(value_label)
+        left_top_layout_middle.addWidget(value_text)
+        
         left_layout.addWidget(title)
+        left_layout.addLayout(left_top_layout_left)
+        left_layout.addLayout(left_top_layout_middle)
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
@@ -207,6 +227,8 @@ class Mortgage(qtw.QWidget):
         query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
             balance.append(query.value(0))
+            
+        
                 
         self.graphWidget = pg.PlotWidget()
         self.graphWidget.setBackground('floralwhite')
