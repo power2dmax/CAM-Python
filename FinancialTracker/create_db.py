@@ -27,13 +27,13 @@ class FinacialData:
     
     # Create mortgage table
     query.exec_("""CREATE TABLE mortgage (
-                Date REAL NOT NULL,
-                Payment INT NOT NULL,
-                Additional_Payment INT2 NOT NULL,
-                Principle INT NOT NULL,
-                Interest INT NOT NULL,
-                Escrow INT NOT NULL,
-                Balance INT2 NOT NULL)""")
+                Date INTEGER NOT NULL,
+                Payment INTEGER NOT NULL,
+                Additional_Payment INTEGER NOT NULL,
+                Principle INTEGER NOT NULL,
+                Interest INTEGER NOT NULL,
+                Escrow INTEGER NOT NULL,
+                Balance INTEGER NOT NULL)""")
     
     #query.exec_("""INSERT INTO mortgage(Date, Payment, Additional_Payment, Principle, Interest, Escrow, Balance)
     #            VALUES('Jun-2016', '1128.04', '21.96', '291.21', '539.52', '297.31', '184686.83'),

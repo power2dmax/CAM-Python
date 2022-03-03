@@ -10,6 +10,9 @@ from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+from pyqtgraph.dockarea import *
 
 from matplotlib.backends.backend_qtagg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
@@ -38,7 +41,7 @@ class App(qtw.QMainWindow):
         
         self.setWindowTitle('Fitness Tracker')
         self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
-        self.resize(1125, 750)
+        self.resize(1175, 750)
         
         self.createActions()
         self.menuWidget()
@@ -81,7 +84,7 @@ class MainWindow(qtw.QWidget):
         tab3 = Savings(self)
         tab4 = Retirement(self)
         tab5 = Mortgage(self)
-        tabs.resize(300,200)
+        #tabs.resize(300,200)
         
         # Add tabs
         tabs.addTab(tab1, qtg.QIcon("icons/cash.png"), "Dashboard")
@@ -146,8 +149,8 @@ class Retirement(qtw.QWidget):
 
 class Mortgage(qtw.QWidget):
     
-    def __init__(self, parent):
-        super(qtw.QWidget, self).__init__(parent)
+    def __init__(self, parent, *args, **kwargs):
+        super(qtw.QWidget, self).__init__(parent, *args, **kwargs)
         
         self.createTable()
         
@@ -159,9 +162,6 @@ class Mortgage(qtw.QWidget):
         left_bottom_layout = qtw.QHBoxLayout()
         
         right_layout = qtw.QVBoxLayout()       
-        right_top_layout = qtw.QVBoxLayout()
-        right_middle_layout = qtw.QVBoxLayout()
-        right_bottom_layout = qtw.QVBoxLayout()
         
         title = qtw.QLabel("Mortgage Balance")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
@@ -203,33 +203,30 @@ class Mortgage(qtw.QWidget):
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
-        
         balance = []
         query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
             balance.append(query.value(0))
-        
-        self.static_canvas = FigureCanvas(Figure(figsize=(6, 3)))
-        right_top_layout.addWidget(NavigationToolbar(self.static_canvas, self))
+                
+        self.graphWidget = pg.PlotWidget()
+        self.graphWidget.setBackground('floralwhite')
+        pen = pg.mkPen(color=(0, 0, 0), width=2)
+        self.graphWidget.setTitle("Mortgage Balance", color='b', size="20pt")
+        self.graphWidget.setLabel('left', 'Current Balance')
+        self.graphWidget.setLabel('bottom', 'Number of Payments')
+        self.graphWidget.setXRange(0, 360, padding=0)
+        self.graphWidget.setYRange(0, 190000, padding=0)
 
-        self.static_ax = self.static_canvas.figure.subplots()
-        t = np.linspace(0, 10, 501)
-        self.static_ax.plot(balance)
+        area = DockArea()
+        d1 = Dock("Dock1", size=(350, 250))
+        area.addDock(d1, 'top')
         
-        right_top_layout.addWidget(self.static_canvas)
+
+        # plot data: x, y values
+        self.graphWidget.plot(balance, pen=pen)
         
-        total_principle = 185000.00
-        current_principle = 40979.73
-        current_interest = 33912.69
-        total_interest = 114062.00
-        
-        
-        
-        
-        
-        right_layout.addLayout(right_top_layout)
-        right_layout.addLayout(right_middle_layout)
-        right_layout.addLayout(right_bottom_layout)
+        right_layout.addWidget(area)
+        d1.addWidget(self.graphWidget)
         
         layout.addLayout(left_layout)
         layout.addLayout(right_layout)

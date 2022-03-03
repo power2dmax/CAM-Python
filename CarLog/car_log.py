@@ -720,13 +720,11 @@ class Gas(qtw.QWidget):
             'The Fuel Econmy from last fill up is: \n' + mpg + ' mpg')
         
     def calculateTotalFuelEcon(self):
-        n = 0
         gasUsed = 0
         mileUsed = 0
         gasQuery = QSqlQuery("SELECT Gallons FROM gas")
         while gasQuery.next():
             gasUsed = gasUsed + int(gasQuery.value(0))
-            n += 1
         mileQuery = QSqlQuery("SELECT Odometer_Reading FROM gas")
         while mileQuery.next():
             mileUsed = mileUsed + int(mileQuery.value(0))
@@ -864,7 +862,6 @@ class GasGraph(qtw.QDialog):
         self.layout.addWidget(NavigationToolbar(self.static_canvas, self))
 
         self._static_ax = self.static_canvas.figure.subplots()
-        t = np.linspace(0, 10, 501)
         self._static_ax.plot(price)
         
         title = qtw.QLabel('Gas Prices')

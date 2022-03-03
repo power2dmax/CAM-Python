@@ -7,7 +7,13 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
+from PyQt5 import QtChart as qtch
 from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+from pyqtgraph.Qt import QtCore, QtGui
+import pyqtgraph.console
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+from pyqtgraph.dockarea import *
 
 
 from matplotlib.backends.backend_qtagg import (
@@ -15,49 +21,67 @@ from matplotlib.backends.backend_qtagg import (
 from matplotlib.figure import Figure
 
 
-class GasGraph(qtw.QDialog):
+class PlotGraph(qtw.QWidget):
     def __init__(self):
         super().__init__()
         
-        self.setGeometry(600, 100, 500, 600)
+        self.setGeometry(600, 100, 450, 400)
         self.createConnection()
+        layout = qtw.QVBoxLayout()
+        self.show()
         
-        price = []
-        query = QSqlQuery("SELECT Cost FROM gas")
+        balance = []
+        query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
-            price.append(query.value(0))
-            
-        date = []
-        query = QSqlQuery("SELECT Date FROM gas")
-        while query.next():
-            date.append(query.value(0))
+            balance.append(query.value(0))
+            #print(x)
         
-        #self._main = qtw.QWidget()
-        #self.setCentralWidget(self._main)
-        self.layout = qtw.QVBoxLayout()
-
-        self.static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-
-        self.layout.addWidget(NavigationToolbar(self.static_canvas, self))
+        loan_amount = 185000
+        payment_months = 360
+        interest_rate = 3.5 / 100
         
 
-        self._static_ax = self.static_canvas.figure.subplots()
-        t = np.linspace(0, 10, 501)
-        self._static_ax.plot(price)
+
         
-        self.layout.addWidget(self.static_canvas)
-        self.setLayout(self.layout)
+        self.graphWidget = pg.PlotWidget()
+        self.graphWidget.setBackground('lightgray')
+        pen = pg.mkPen(color=(0, 0, 0), width=2)
+        self.graphWidget.setTitle("Mortgage Balance", color='w', size="20pt")
+        self.graphWidget.setLabel('left', 'Current Balance')
+        self.graphWidget.setLabel('bottom', 'Number of Payments')
+        self.graphWidget.setXRange(0, 360, padding=0)
+        self.graphWidget.setYRange(0, 190000, padding=0)
+        
+        total_principle = 185000
+        current_principle = 40979.73
+        current_interest = 33912.69
+        total_interest = 114062
+
+        
+        area = DockArea()
+        d1 = Dock("Dock1", size=(150, 150))
+        area.addDock(d1, 'top')
+        
+
+        # plot data: x, y values
+        self.graphWidget.plot(balance, pen=pen)
+        
+        layout.addWidget(area)
+        d1.addWidget(self.graphWidget)
+        self.setLayout(layout)
+        
+        
         
     def createConnection(self):
         self.database = qts.QSqlDatabase.addDatabase("QSQLITE") # SQLite version 3
-        self.database.setDatabaseName("files/car_log.db")
+        self.database.setDatabaseName("files/financial_log.db")
 
         if not self.database.open():
             print("Unable to open data source file.")
             sys.exit(1) # Error code 1 - signifies error
 
         # Check if the tables we need exist in the database
-        tables_needed = {'maintenance', 'gas', 'car', 'contacts'}
+        tables_needed = {'mortgage'}
         tables_not_found = tables_needed - set(self.database.tables())
         if tables_not_found:
             qtw.QMessageBox.critical(None, 'Error', f'The following tables are missing from the database: {tables_not_found}')
@@ -66,14 +90,8 @@ class GasGraph(qtw.QDialog):
 
 
 if __name__ == "__main__":
-    # Check whether there is already a running QApplication (e.g., if running
-    # from an IDE).
-    qapp = qtw.QApplication.instance()
-    if not qapp:
-        qapp = qtw.QApplication(sys.argv)
-
-    app = GasGraph()
-    app.show()
-    app.activateWindow()
-    app.raise_()
-    qapp.exec()
+    app = qtw.QApplication(sys.argv)
+    windows_style = qtw.QStyleFactory.create('Windows')
+    app.setStyle(windows_style)
+    window = PlotGraph()
+    sys.exit(app.exec_())
