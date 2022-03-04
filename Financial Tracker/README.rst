@@ -1,5 +1,5 @@
 ==========
-finacial_tracker.py
+financial_tracker.py
 ==========
 
 
