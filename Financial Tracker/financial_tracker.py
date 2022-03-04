@@ -2,8 +2,7 @@
 """
 
 """
-
-import sys, os, csv
+import sys
 import numpy as np
 from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
@@ -13,10 +12,6 @@ from PyQt5.QtSql import QSqlDatabase, QSqlQuery
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
-
-#from matplotlib.backends.backend_qtagg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-#from matplotlib.figure import Figure
-#import matplotlib.pyplot as plt
 
 
 class DateDelegate(qtw.QStyledItemDelegate):
@@ -256,21 +251,23 @@ class Mortgage(qtw.QWidget):
         # Set up the Line Graph for Mortgage balance vs the amortization
         self.graphWidget = pg.PlotWidget()
         self.graphWidget.setBackground('floralwhite')
-        pen = pg.mkPen(color=(0, 0, 0), width=2)
+        pen1 = pg.mkPen(color=('#0c3d9c'), width=2)
+        pen2 = pg.mkPen(color=('#9c290c'), width=2)
         self.graphWidget.setTitle("Mortgage Balance vs Amortization", color='black', font='bold', size="20pt")
         self.graphWidget.setLabel('left', 'Current Balance')
         self.graphWidget.setLabel('bottom', 'Number of Payments')
         self.graphWidget.setXRange(0, 360, padding=0)
         self.graphWidget.setYRange(0, 190000, padding=0)
         
-        self.graphWidget.plot(balance, pen=pen)
-        self.graphWidget.plot(amortization, pen=pen)
+        self.graphWidget.plot(balance, pen=pen1)
+        self.graphWidget.plot(amortization, pen=pen2)
 
         # Set up the Bar Graph
         total_principle = 185000
         current_principle = 40979.73
         current_interest = 33912.69
         total_interest = 114062
+        
         window = pg.PlotWidget()
         x = np.arange(1)
         y1 = total_principle
@@ -283,11 +280,19 @@ class Mortgage(qtw.QWidget):
         b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.35, brush='#d1722e')
         b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#873f0c')
         
+        # Add the labels to the bar braphs
+        text_bg1 = pg.TextItem("Total Principle", anchor=(-0.2,1.5))
+        window.addItem(text_bg1)
+        text_bg1.setPos(-.75, y1)
+        arrow1 = pg.ArrowItem(pos=(-.75, y1), angle=-45)
+        window.addItem(arrow1)
+        
         window.addItem(b1)
         window.addItem(b2)
         window.addItem(b3)
         window.addItem(b4)
         window.setBackground('floralwhite')
+        window.setTitle("Totals", color='black', font='bold', size="20pt")
 
         right_layout.addWidget(area)
         d1.addWidget(self.graphWidget)
