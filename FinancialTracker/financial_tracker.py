@@ -239,24 +239,30 @@ class Mortgage(qtw.QWidget):
         query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
             balance.append(query.value(0))
+            
+        amortization = []
+        query = QSqlQuery("SELECT Principle FROM amortization")
+        while query.next():
+            amortization.append(query.value(0))
              
-        graphWidget = pg.PlotWidget()
-        graphWidget.setBackground('floralwhite')
+        self.graphWidget = pg.PlotWidget()
+        self.graphWidget.setBackground('floralwhite')
         pen = pg.mkPen(color=(0, 0, 0), width=2)
-        graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
-        graphWidget.setLabel('left', 'Current Balance')
-        graphWidget.setLabel('bottom', 'Number of Payments')
-        graphWidget.setXRange(0, 360, padding=0)
-        graphWidget.setYRange(0, 190000, padding=0)
+        self.graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
+        self.graphWidget.setLabel('left', 'Current Balance')
+        self.graphWidget.setLabel('bottom', 'Number of Payments')
+        self.graphWidget.setXRange(0, 360, padding=0)
+        self.graphWidget.setYRange(0, 190000, padding=0)
 
         area = DockArea()
         d1 = Dock("Dock1", size=(350, 350))
         d2 = Dock("Dock2", size=(350, 350))
         area.addDock(d1, 'top')
         area.addDock(d2, 'bottom')
-
+       
         # Set up the Line Graph for Mortgage balance
-        graphWidget.plot(balance, pen=pen)
+        self.graphWidget.plot(balance, pen=pen)
+        self.graphWidget.plot(amortization, pen=pen)
 
         # Set up the Bar Graph
         total_principle = 185000
@@ -282,7 +288,7 @@ class Mortgage(qtw.QWidget):
         window.setBackground('floralwhite')
 
         right_layout.addWidget(area)
-        d1.addWidget(graphWidget)
+        d1.addWidget(self.graphWidget)
         d2.addWidget(window)
         
         layout.addLayout(left_layout)

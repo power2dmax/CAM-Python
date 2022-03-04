@@ -21,10 +21,10 @@ class FinacialData:
     query.exec_("DROP TABLE checking")
     query.exec_("DROP TABLE savings")
     query.exec_("DROP TABLE retirement")
-    query.exec_("DROP TABLE mortgage")
+    #query.exec_("DROP TABLE mortgage")
+    query.exec_("DROP TABLE amortization")
     
-    
-    
+
     # Create mortgage table
     query.exec_("""CREATE TABLE mortgage (
                 Date INTEGER NOT NULL,
@@ -35,16 +35,11 @@ class FinacialData:
                 Escrow INTEGER NOT NULL,
                 Balance INTEGER NOT NULL)""")
     
-    #query.exec_("""INSERT INTO mortgage(Date, Payment, Additional_Payment, Principle, Interest, Escrow, Balance)
-    #            VALUES('Jun-2016', '1128.04', '21.96', '291.21', '539.52', '297.31', '184686.83'),
-    #            ('Jul-2016', '1128.04', '21.96', '291.12', '538.61', '297.31', '184372.75'),
-    #            ('Aug-2016', '1128.04', '21.96', '292.98', '537.75', '297.31', '184057.81'),
-    #            ('Sep-2016', '1128.04', '71.96', '294.10', '536.63', '297.31', '183691.75'),               
-    #            ('Oct-2016', '1128.04', '71.96', '295.17', '535.35', '297.31', '183324.62'),
-    #            ('Nov-2016', '1128.04', '71.96', '296.24', '534.49', '297.31', '182956.42')
-    #            """)
     
-    
+    # Create amortization table
+    query.exec_("""CREATE TABLE amortization (
+                Principle INTEGER NOT NULL)""")
+        
 
     print("[INFO] Database successfully created.")
 
