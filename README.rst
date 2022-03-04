@@ -11,14 +11,10 @@ in suppport of making the program user friendly and functional.
 
 Programs
 ++++++++++++++++++
-CarLog/ 
-
-car_log.py - This program will allow the user to track maintenance and gas while giving maintenance tips
+CarLog / car_log.py - This program will allow the user to track maintenance and gas while giving maintenance tips
 and calculating a car loan based on purchase price, years, and interest rate. This program utilizes the 
 Python modules; PyQt5, SQLite, and matplotlib.
 
-FinacncialTracler/ 
-
-finanacial_tracker.py - This program will aloow the user to track their check, savings, and retirement accounts,
+FinacncialTracler / finanacial_tracker.py - This program will aloow the user to track their check, savings, and retirement accounts,
 while keeping an eye on the progress of their mortgage. This program utilizes the Python modules; PyQt5, SQLite,
 and pyqtgrapgh
