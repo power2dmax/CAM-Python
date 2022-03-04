@@ -39,7 +39,7 @@ class App(qtw.QMainWindow):
         
         self.setWindowTitle('Financial Tracker')
         self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
-        self.resize(1175, 750)
+        self.resize(1175, 700)
         
         self.createActions()
         self.menuWidget()
@@ -235,6 +235,8 @@ class Mortgage(qtw.QWidget):
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
+        
+        # Put together the data that will be needed for creating the graphs and charts
         balance = []
         query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
@@ -244,23 +246,24 @@ class Mortgage(qtw.QWidget):
         query = QSqlQuery("SELECT Principle FROM amortization")
         while query.next():
             amortization.append(query.value(0))
-             
-        self.graphWidget = pg.PlotWidget()
-        self.graphWidget.setBackground('floralwhite')
-        pen = pg.mkPen(color=(0, 0, 0), width=2)
-        self.graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
-        self.graphWidget.setLabel('left', 'Current Balance')
-        self.graphWidget.setLabel('bottom', 'Number of Payments')
-        self.graphWidget.setXRange(0, 360, padding=0)
-        self.graphWidget.setYRange(0, 190000, padding=0)
-
+        
+        # Set up the graph area on the left using pyqtgrapgh's Docks
         area = DockArea()
         d1 = Dock("Dock1", size=(350, 350))
         d2 = Dock("Dock2", size=(350, 350))
         area.addDock(d1, 'top')
         area.addDock(d2, 'bottom')
-       
-        # Set up the Line Graph for Mortgage balance
+             
+        # Set up the Line Graph for Mortgage balance vs the amortization
+        self.graphWidget = pg.PlotWidget()
+        self.graphWidget.setBackground('floralwhite')
+        pen = pg.mkPen(color=(0, 0, 0), width=2)
+        self.graphWidget.setTitle("Mortgage Balance vs Amortization", color='black', font='bold', size="20pt")
+        self.graphWidget.setLabel('left', 'Current Balance')
+        self.graphWidget.setLabel('bottom', 'Number of Payments')
+        self.graphWidget.setXRange(0, 360, padding=0)
+        self.graphWidget.setYRange(0, 190000, padding=0)
+        
         self.graphWidget.plot(balance, pen=pen)
         self.graphWidget.plot(amortization, pen=pen)
 
@@ -276,10 +279,10 @@ class Mortgage(qtw.QWidget):
         y3 = current_interest
         y4 = total_interest
         
-        b1 = pg.BarGraphItem(x=x-0.75, height = y1, width=0.25, brush='#7ec1f7')
-        b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.25, brush='#7ec1f7')
-        b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.25, brush='#7ec1f7')
-        b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.25, brush='#7ec1f7')
+        b1 = pg.BarGraphItem(x=x-0.75, height = y1, width=0.35, brush='#1a4582')
+        b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.35, brush='#7ec1f7')
+        b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.35, brush='#396099')
+        b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#0c5696')
         
         window.addItem(b1)
         window.addItem(b2)
