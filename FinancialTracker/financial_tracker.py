@@ -235,7 +235,6 @@ class Mortgage(qtw.QWidget):
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
-        
         # Put together the data that will be needed for creating the graphs and charts
         balance = []
         query = QSqlQuery("SELECT Balance FROM mortgage")
