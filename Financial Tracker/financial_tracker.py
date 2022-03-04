@@ -279,11 +279,30 @@ class Mortgage(qtw.QWidget):
         b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#873f0c')
         
         # Add the labels to the bar braphs
-        text_bg1 = pg.TextItem("Total Principle \n$ " + str(total_principle), border='w', color='w', fill=('#1a4582'), anchor=(-0.2,1.5))
+        text_bg1 = pg.TextItem("Total Principle \n$ " +
+                str(total_principle), border='w', color='w',
+                fill=('#1a4582'), anchor=(-0.2,1.5))
         window.addItem(text_bg1)
         text_bg1.setPos(-.75, y1)
         arrow1 = pg.ArrowItem(pos=(-.75, y1), angle=-45)
         window.addItem(arrow1)
+        
+        text_bg2 = pg.TextItem("Principle Paid\n$ " +
+                str(current_principle), border='w', color='w',
+                fill=('#396099'), anchor=(0.5,1.65))
+        window.addItem(text_bg2)
+        text_bg2.setPos(-.25, y2)
+        arrow2 = pg.ArrowItem(pos=(-.25, y2), angle=-90)
+        window.addItem(arrow2)
+
+        text_bg3 = pg.TextItem("Interest Paid\n$ " +
+                str(current_principle), border='w', color='w',
+                fill=('#d1722e'), anchor=(-1.5,1.65))
+        window.addItem(text_bg3)
+        text_bg3.setPos(-.25, y3)
+        arrow3 = pg.ArrowItem(pos=(0.25, y3), angle=-90)
+        window.addItem(arrow3)
+
         
         window.addItem(b1)
         window.addItem(b2)
