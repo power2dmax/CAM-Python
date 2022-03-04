@@ -27,56 +27,30 @@ class PlotGraph(qtw.QWidget):
         
         self.setGeometry(600, 100, 450, 400)
         self.createConnection()
-        self.layout = qtw.QVBoxLayout()
+        layout = qtw.QVBoxLayout()
         self.show()
         
-        balance = []
-        query = QSqlQuery("SELECT Balance FROM mortgage")
-        while query.next():
-            balance.append(query.value(0))
-            #print(x)
         
         loan_amount = 185000
         payment_months = 360
         interest_rate = 3.5 / 100
         
-        self.graphWidget = pg.PlotWidget()
-        self.graphWidget.setBackground('lightgray')
-        pen = pg.mkPen(color=(0, 0, 0), width=2)
-        self.graphWidget.setTitle("Mortgage Balance", color='w', size="20pt")
-        self.graphWidget.setLabel('left', 'Current Balance')
-        self.graphWidget.setLabel('bottom', 'Number of Payments')
-        self.graphWidget.setXRange(0, 360, padding=0)
-        self.graphWidget.setYRange(0, 190000, padding=0)
+        total_payments = 79679.56
+        total_principle = 40607.21
+        total_interest = 33382.01
         
-        total_principle = 185000
-        current_principle = 40979.73
-        current_interest = 33912.69
-        total_interest = 114062
+        window = pg.plot()
+        
+        x = [1, 2, 3]
+        y = [total_payments, total_principle, total_interest]
+        
+        bargraph = pg.BarGraphItem(x=x, height = y, width=0.5, brush='g')
+        
+        window.addItem(bargraph)
 
         
-        area = DockArea()
-        d1 = Dock("Dock1", size=(150, 150))
-        d2 = Dock("Dock2", size=(150, 150))
-        area.addDock(d1, 'top')
-        area.addDock(d2, 'bottom')
-        
-        self.graphWidget.plot(balance, pen=pen)
-        
-        self.window = pg.PlotWidget()
-        
-        x = [1, 2, 3, 4]
-        y = [total_principle, current_principle, current_interest, total_interest]
-        
-        self.bargraph = pg.BarGraphItem(x=x, height = y, width=0.5, brush='g')
-        self.window.addItem(self.bargraph)
-
-        
-        
-        self.layout.addWidget(area)
-        d1.addWidget(self.graphWidget)
-        d2.addWidget(self.window)
-        self.setLayout(self.layout)
+        layout.addWidget(window)
+        self.setLayout(layout)
         
         
         

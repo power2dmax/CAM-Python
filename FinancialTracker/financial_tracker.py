@@ -22,8 +22,6 @@ import matplotlib.pyplot as plt
 class DateDelegate(qtw.QStyledItemDelegate):
 
     def createEditor(self, parent, option, proxyModelIndex):
-        # make sure to explicitly set the parent
-        # otherwise it pops up in a top-level window!
         date_inp = qtw.QDateEdit(parent, calendarPopup=True)
         d = qtc.QDate.currentDate()
         date_inp.setDate(d)
@@ -41,7 +39,7 @@ class App(qtw.QMainWindow):
         
         self.setWindowTitle('Financial Tracker')
         self.setWindowIcon(qtg.QIcon("icons/cam_3.png"))
-        self.resize(1175, 650)
+        self.resize(1175, 750)
         
         self.createActions()
         self.menuWidget()
@@ -173,14 +171,17 @@ class Mortgage(qtw.QWidget):
             balanceFinal = (balanceQuery.value(0))
         
         balance_label = qtw.QLabel("Current Balance:")
+        balance_label.setFont(qtg.QFont('Arial', 10))
         balance_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(balanceFinal)))
         
         est_value = int(450000)
         value_label = qtw.QLabel("Current Value:")
+        value_label.setFont(qtg.QFont('Arial', 10))
         value_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(est_value)))
         
         difference = est_value - int(balanceFinal)
         diff_label = qtw.QLabel("Difference:")
+        diff_label.setFont(qtg.QFont('Arial', 10))
         diff_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(difference)))
         
         # Create table view and set model
@@ -238,28 +239,51 @@ class Mortgage(qtw.QWidget):
         query = QSqlQuery("SELECT Balance FROM mortgage")
         while query.next():
             balance.append(query.value(0))
-            
-        
-                
-        self.graphWidget = pg.PlotWidget()
-        self.graphWidget.setBackground('floralwhite')
+             
+        graphWidget = pg.PlotWidget()
+        graphWidget.setBackground('floralwhite')
         pen = pg.mkPen(color=(0, 0, 0), width=2)
-        self.graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
-        self.graphWidget.setLabel('left', 'Current Balance')
-        self.graphWidget.setLabel('bottom', 'Number of Payments')
-        self.graphWidget.setXRange(0, 360, padding=0)
-        self.graphWidget.setYRange(0, 190000, padding=0)
+        graphWidget.setTitle("Mortgage Balance", color='black', font='bold', size="20pt")
+        graphWidget.setLabel('left', 'Current Balance')
+        graphWidget.setLabel('bottom', 'Number of Payments')
+        graphWidget.setXRange(0, 360, padding=0)
+        graphWidget.setYRange(0, 190000, padding=0)
 
         area = DockArea()
-        d1 = Dock("Dock1", size=(350, 250))
+        d1 = Dock("Dock1", size=(350, 350))
+        d2 = Dock("Dock2", size=(350, 350))
         area.addDock(d1, 'top')
-        
+        area.addDock(d2, 'bottom')
 
-        # plot data: x, y values
-        self.graphWidget.plot(balance, pen=pen)
+        # Set up the Line Graph for Mortgage balance
+        graphWidget.plot(balance, pen=pen)
+
+        # Set up the Bar Graph
+        total_principle = 185000
+        current_principle = 40979.73
+        current_interest = 33912.69
+        total_interest = 114062
+        window = pg.PlotWidget()
+        x = np.arange(1)
+        y1 = total_principle
+        y2 = current_principle
+        y3 = current_interest
+        y4 = total_interest
         
+        b1 = pg.BarGraphItem(x=x-0.75, height = y1, width=0.25, brush='#7ec1f7')
+        b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.25, brush='#7ec1f7')
+        b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.25, brush='#7ec1f7')
+        b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.25, brush='#7ec1f7')
+        
+        window.addItem(b1)
+        window.addItem(b2)
+        window.addItem(b3)
+        window.addItem(b4)
+        window.setBackground('floralwhite')
+
         right_layout.addWidget(area)
-        d1.addWidget(self.graphWidget)
+        d1.addWidget(graphWidget)
+        d2.addWidget(window)
         
         layout.addLayout(left_layout)
         layout.addLayout(right_layout)
