@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets as qtw
 from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery
+from PyQt5.QtSql import QSqlQuery
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
@@ -49,8 +49,6 @@ class App(qtw.QMainWindow):
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setIcon(qtg.QIcon("icons/exit.png"))
         self.exit_action.triggered.connect(self.close)
-        
-        
         
     def menuWidget(self):
         # Create the menubar
@@ -281,7 +279,7 @@ class Mortgage(qtw.QWidget):
         b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#873f0c')
         
         # Add the labels to the bar braphs
-        text_bg1 = pg.TextItem("Total Principle", anchor=(-0.2,1.5))
+        text_bg1 = pg.TextItem("Total Principle \n$ " + str(total_principle), border='w', color='w', fill=('#1a4582'), anchor=(-0.2,1.5))
         window.addItem(text_bg1)
         text_bg1.setPos(-.75, y1)
         arrow1 = pg.ArrowItem(pos=(-.75, y1), angle=-45)
