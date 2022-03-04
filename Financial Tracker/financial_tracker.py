@@ -14,9 +14,9 @@ from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
 
-from matplotlib.backends.backend_qtagg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
+#from matplotlib.backends.backend_qtagg import (FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+#from matplotlib.figure import Figure
+#import matplotlib.pyplot as plt
 
 
 class DateDelegate(qtw.QStyledItemDelegate):
@@ -279,9 +279,9 @@ class Mortgage(qtw.QWidget):
         y4 = total_interest
         
         b1 = pg.BarGraphItem(x=x-0.75, height = y1, width=0.35, brush='#1a4582')
-        b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.35, brush='#7ec1f7')
-        b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.35, brush='#396099')
-        b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#0c5696')
+        b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.35, brush='#396099')
+        b3 = pg.BarGraphItem(x=x+0.25, height = y3, width=0.35, brush='#d1722e')
+        b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#873f0c')
         
         window.addItem(b1)
         window.addItem(b2)
