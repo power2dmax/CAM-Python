@@ -148,26 +148,64 @@ class Mortgage(qtw.QWidget):
         layout = qtw.QHBoxLayout()
         self.setLayout(layout)
         
+        # Set up the variables
+        loan_amount = 500000
+        est_value = int(650000)
+        total_interest_loan = float("{:.2f}" .format(466278.92))
+        
         left_layout = qtw.QVBoxLayout()
         left_top_layout = qtw.QGridLayout()
         left_bottom_layout = qtw.QHBoxLayout()
         
         right_layout = qtw.QVBoxLayout()
         
+        # Put together the data that will be needed for creating the graphs and charts
+        balance = []
+        query = QSqlQuery("SELECT Balance FROM mortgage")
+        while query.next():
+            balance.append(query.value(0))
+            
+        amortization = []
+        query = QSqlQuery("SELECT Principle FROM amortization")
+        while query.next():
+            amortization.append(query.value(0))
+            
+        total_additional = 0
+        query = QSqlQuery("SELECT Additional_Payment FROM mortgage")
+        while query.next():
+            total_additional = total_additional + query.value(0)
         
-        title = qtw.QLabel("Mortgage")
-        title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
-        title.setStyleSheet("font: bold 24px")
+        total_principle = 0
+        query = QSqlQuery("SELECT Principle FROM mortgage")
+        while query.next():
+            total_principle = total_principle + query.value(0)
+        
+        totalPrinciple = float("%.2f" % (total_additional + total_principle))
+        
+        total_interest = 0
+        query = QSqlQuery("SELECT Interest FROM mortgage")
+        while query.next():
+            total_interest = total_interest + query.value(0)
+        totalInterest = float("%.2f" % (total_interest))
         
         balanceQuery = QSqlQuery("SELECT Balance FROM mortgage")
         while balanceQuery.next():
             balanceFinal = (balanceQuery.value(0))
         
+        
+        
+        title = qtw.QLabel("Mortgage")
+        title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
+        title.setStyleSheet("font: bold 24px")
+        
+        loan_amount_label = qtw.QLabel("Loan Amount:")
+        loan_amount_label.setFont(qtg.QFont('Arial', 10))
+        loan_amount_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(loan_amount)))
+                
         balance_label = qtw.QLabel("Current Balance:")
         balance_label.setFont(qtg.QFont('Arial', 10))
         balance_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(balanceFinal)))
         
-        est_value = int(450000)
         value_label = qtw.QLabel("Current Value:")
         value_label.setFont(qtg.QFont('Arial', 10))
         value_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(est_value)))
@@ -209,13 +247,20 @@ class Mortgage(qtw.QWidget):
         totals_button.setIcon(qtg.QIcon("icons/totals.png"))
         totals_button.setStyleSheet("padding: 6px")
         totals_button.clicked.connect(self.totals)
+        
+        update_data = qtw.QPushButton("Update Data")
 
-        left_top_layout.addWidget(balance_label, 0, 0)
-        left_top_layout.addWidget(balance_text, 1, 0)
-        left_top_layout.addWidget(value_label, 0, 1)
-        left_top_layout.addWidget(value_text, 1, 1)
-        left_top_layout.addWidget(diff_label, 0, 2)
-        left_top_layout.addWidget(diff_text, 1, 2)
+        left_top_layout.addWidget(title, 0, 0)
+        left_top_layout.addWidget(update_data, 0, 2)
+        
+        left_top_layout.addWidget(loan_amount_label, 1, 0)
+        left_top_layout.addWidget(loan_amount_text, 2, 0)
+        left_top_layout.addWidget(balance_label, 3, 0)
+        left_top_layout.addWidget(balance_text, 4, 0)
+        left_top_layout.addWidget(value_label, 3, 1)
+        left_top_layout.addWidget(value_text, 4, 1)
+        left_top_layout.addWidget(diff_label, 3, 2)
+        left_top_layout.addWidget(diff_text, 4, 2)
                
         left_bottom_layout.addWidget(add_row)
         left_bottom_layout.addWidget(del_row)
@@ -223,22 +268,13 @@ class Mortgage(qtw.QWidget):
         left_bottom_layout.addWidget(totals_button)
         left_bottom_layout.addStretch()
         
-        left_layout.addWidget(title)
+        #left_layout.addWidget(title)
         left_layout.addLayout(left_top_layout)
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
         
-        # Put together the data that will be needed for creating the graphs and charts
-        balance = []
-        query = QSqlQuery("SELECT Balance FROM mortgage")
-        while query.next():
-            balance.append(query.value(0))
-            
-        amortization = []
-        query = QSqlQuery("SELECT Principle FROM amortization")
-        while query.next():
-            amortization.append(query.value(0))
-        
+
+
         # Set up the graph area on the left using pyqtgrapgh's Docks
         area = DockArea()
         d1 = Dock("Dock1", size=(350, 350))
@@ -255,23 +291,19 @@ class Mortgage(qtw.QWidget):
         self.graphWidget.setLabel('left', 'Current Balance')
         self.graphWidget.setLabel('bottom', 'Number of Payments')
         self.graphWidget.setXRange(0, 360, padding=0)
-        self.graphWidget.setYRange(0, 190000, padding=0)
+        self.graphWidget.setYRange(0, 500000, padding=0)
         
         self.graphWidget.plot(balance, pen=pen1)
         self.graphWidget.plot(amortization, pen=pen2)
 
-        # Set up the Bar Graph
-        total_principle = 185000
-        current_principle = 40979.73
-        current_interest = 33912.69
-        total_interest = 114062
+
         
         window = pg.PlotWidget()
         x = np.arange(1)
-        y1 = total_principle
-        y2 = current_principle
-        y3 = current_interest
-        y4 = total_interest
+        y1 = loan_amount
+        y2 = totalPrinciple
+        y3 = totalInterest
+        y4 = total_interest_loan
         
         b1 = pg.BarGraphItem(x=x-0.75, height = y1, width=0.35, brush='#1a4582')
         b2 = pg.BarGraphItem(x=x-0.25, height = y2, width=0.35, brush='#396099')
@@ -279,30 +311,37 @@ class Mortgage(qtw.QWidget):
         b4 = pg.BarGraphItem(x=x+0.75, height = y4, width=0.35, brush='#873f0c')
         
         # Add the labels to the bar braphs
-        text_bg1 = pg.TextItem("Total Principle \n$ " +
-                str(total_principle), border='w', color='w',
+        text_bg1 = pg.TextItem("Loan Amount \n$ " +
+                str(loan_amount), border='w', color='w',
                 fill=('#1a4582'), anchor=(-0.2,1.5))
         window.addItem(text_bg1)
         text_bg1.setPos(-.75, y1)
         arrow1 = pg.ArrowItem(pos=(-.75, y1), angle=-45)
         window.addItem(arrow1)
         
-        text_bg2 = pg.TextItem("Principle Paid\n$ " +
-                str(current_principle), border='w', color='w',
+        text_bg2 = pg.TextItem("Total Principle Paid\n$ " +
+                str(totalPrinciple), border='w', color='w',
                 fill=('#396099'), anchor=(0.5,1.65))
         window.addItem(text_bg2)
         text_bg2.setPos(-.25, y2)
         arrow2 = pg.ArrowItem(pos=(-.25, y2), angle=-90)
         window.addItem(arrow2)
 
-        text_bg3 = pg.TextItem("Interest Paid\n$ " +
-                str(current_principle), border='w', color='w',
-                fill=('#d1722e'), anchor=(-1.5,1.65))
+        text_bg3 = pg.TextItem("Total Interest Paid\n$ " +
+                str(totalInterest), border='w', color='w',
+                fill=('#d1722e'), anchor=(-0.9,1.65))
         window.addItem(text_bg3)
         text_bg3.setPos(-.25, y3)
         arrow3 = pg.ArrowItem(pos=(0.25, y3), angle=-90)
         window.addItem(arrow3)
-
+        
+        text_bg4 = pg.TextItem("Total Interest on Loan\n$ " +
+                str(total_interest_loan), border='w', color='w',
+                fill=('#873f0c'), anchor=(-1.25,1.5))
+        window.addItem(text_bg4)
+        text_bg4.setPos(-.25, y4)
+        arrow4 = pg.ArrowItem(pos=(0.75, y4), angle=-135)
+        window.addItem(arrow4)
         
         window.addItem(b1)
         window.addItem(b2)
@@ -359,11 +398,6 @@ class Mortgage(qtw.QWidget):
         self.model.select()
         
     def totals(self):
-        total_payment = 0
-        query = QSqlQuery("SELECT Payment FROM mortgage")
-        while query.next():
-            total_payment = total_payment + query.value(0)
-        totalPayment = str("%.2f" % (total_payment))
         
         total_additional = 0
         query = QSqlQuery("SELECT Additional_Payment FROM mortgage")
@@ -390,7 +424,6 @@ class Mortgage(qtw.QWidget):
         totalEscrow =str("%.2f" % (total_escrow))
         
         qtw.QMessageBox.about(self, 'Total Costs',                 
-            'The Total Payments made is: $ ' + totalPayment +
             '\nThe Total Principle Paid is: $ ' + totalPrinciple +
             '\nThe Total in Interest Paid is: $ ' + totalInterest +
             '\nThe Total in Escrow Paid is: $ ' + totalEscrow)

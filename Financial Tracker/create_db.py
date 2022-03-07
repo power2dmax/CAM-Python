@@ -18,11 +18,11 @@ class FinacialData:
     query = QSqlQuery()
     
     # Erase database contents so that there are not duplicates
-    query.exec_("DROP TABLE checking")
-    query.exec_("DROP TABLE savings")
-    query.exec_("DROP TABLE retirement")
-    #query.exec_("DROP TABLE mortgage")
-    query.exec_("DROP TABLE amortization")
+    #query.exec_("DROP TABLE checking")
+    #query.exec_("DROP TABLE savings")
+    #query.exec_("DROP TABLE retirement")
+    query.exec_("DROP TABLE mortgage")
+    #query.exec_("DROP TABLE amortization")
     
 
     # Create mortgage table
