@@ -1,6 +1,10 @@
 # financial_tracker.py
 """
-
+Fincancial tracker; multiple tabs that allwos the user to track their various
+accounts. Development will focus on one area at a time and build out the
+functioanlity. Develpment is as follows:
+ - Mortgage Tracking - Allows the user to track their mortgage. Total loan amount,
+ total princple paid to date, total interest paid to date.
 """
 import sys
 import numpy as np
@@ -9,14 +13,13 @@ from PyQt5 import QtSql as qts
 from PyQt5 import QtCore as qtc
 from PyQt5 import QtGui as qtg
 from PyQt5.QtSql import QSqlQuery
-from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
 
 
 class DateDelegate(qtw.QStyledItemDelegate):
 
-    def createEditor(self, parent, option, proxyModelIndex):
+    def createEditor(self, parent, proxyModelIndex):
         date_inp = qtw.QDateEdit(parent, calendarPopup=True)
         d = qtc.QDate.currentDate()
         date_inp.setDate(d)
@@ -40,8 +43,7 @@ class App(qtw.QMainWindow):
         self.menuWidget()
         self.mainWindow = MainWindow(self)
         self.setCentralWidget(self.mainWindow)
-                
-        
+
         self.show()
         
     def createActions(self):
@@ -78,10 +80,10 @@ class MainWindow(qtw.QWidget):
         #tabs.resize(300,200)
         
         # Add tabs
-        tabs.addTab(tab1, qtg.QIcon("icons/cash.png"), "Dashboard")
-        tabs.addTab(tab2,qtg.QIcon("icons/cash.png"), "Checking")
-        tabs.addTab(tab3, qtg.QIcon("icons/cash.png"), "Savings")
-        tabs.addTab(tab4, qtg.QIcon("icons/cash.png"), "Retirement")
+        #tabs.addTab(tab1, qtg.QIcon("icons/cash.png"), "Dashboard")
+        #tabs.addTab(tab2,qtg.QIcon("icons/cash.png"), "Checking")
+        #tabs.addTab(tab3, qtg.QIcon("icons/cash.png"), "Savings")
+        #tabs.addTab(tab4, qtg.QIcon("icons/cash.png"), "Retirement")
         tabs.addTab(tab5, qtg.QIcon("icons/house.png"), "Mortgage")
         
         # Add tabs to widget
@@ -149,14 +151,13 @@ class Mortgage(qtw.QWidget):
         self.setLayout(layout)
         
         # Set up the variables
-        loan_amount = 500000
+        loan_amount = float("{:.2f}" .format(500000.00))
         est_value = int(650000)
         total_interest_loan = float("{:.2f}" .format(466278.92))
         
         left_layout = qtw.QVBoxLayout()
         left_top_layout = qtw.QGridLayout()
         left_bottom_layout = qtw.QHBoxLayout()
-        
         right_layout = qtw.QVBoxLayout()
         
         # Put together the data that will be needed for creating the graphs and charts
@@ -179,7 +180,6 @@ class Mortgage(qtw.QWidget):
         query = QSqlQuery("SELECT Principle FROM mortgage")
         while query.next():
             total_principle = total_principle + query.value(0)
-        
         totalPrinciple = float("%.2f" % (total_additional + total_principle))
         
         total_interest = 0
@@ -192,8 +192,6 @@ class Mortgage(qtw.QWidget):
         while balanceQuery.next():
             balanceFinal = (balanceQuery.value(0))
         
-        
-        
         title = qtw.QLabel("Mortgage")
         title.setSizePolicy(qtw.QSizePolicy.Fixed, qtw.QSizePolicy.Fixed)
         title.setStyleSheet("font: bold 24px")
@@ -201,6 +199,14 @@ class Mortgage(qtw.QWidget):
         loan_amount_label = qtw.QLabel("Loan Amount:")
         loan_amount_label.setFont(qtg.QFont('Arial', 10))
         loan_amount_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(loan_amount)))
+        
+        loan_years_label = qtw.QLabel("Loan Years:")
+        loan_years_label.setFont(qtg.QFont('Arial', 10))
+        loan_years_text = qtw.QLineEdit(str(30))
+        
+        interest_rate_label = qtw.QLabel("Interest Rate:")
+        interest_rate_label.setFont(qtg.QFont('Arial', 10))
+        interest_rate_text = qtw.QLineEdit(str(4))
                 
         balance_label = qtw.QLabel("Current Balance:")
         balance_label.setFont(qtg.QFont('Arial', 10))
@@ -214,6 +220,20 @@ class Mortgage(qtw.QWidget):
         diff_label = qtw.QLabel("Difference:")
         diff_label.setFont(qtg.QFont('Arial', 10))
         diff_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(difference)))
+        diff_text.setStyleSheet("""
+            QLineEdit {
+            background-color: green;
+            color: white
+            }
+            """)
+        
+        total_principle_label = qtw.QLabel("Total Principle Paid:")
+        total_principle_label.setFont(qtg.QFont('Arial', 10))
+        total_principle_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(totalPrinciple)))
+        
+        total_interest_label = qtw.QLabel("Total Interest Paid:")
+        total_interest_label.setFont(qtg.QFont('Arial', 10))
+        total_interest_text = qtw.QLineEdit(str("$ " + "{:.2f}".format(totalInterest)))
         
         # Create table view and set model
         self.table_view = qtw.QTableView()
@@ -248,19 +268,29 @@ class Mortgage(qtw.QWidget):
         totals_button.setStyleSheet("padding: 6px")
         totals_button.clicked.connect(self.totals)
         
-        update_data = qtw.QPushButton("Update Data")
+        update_data_button = qtw.QPushButton("Update Data")
+        update_data_button.setIcon(qtg.QIcon("icons/update.png"))
+        update_data_button.setStyleSheet("padding: 6px")
+        update_data_button.clicked.connect(self.updateData)
 
         left_top_layout.addWidget(title, 0, 0)
-        left_top_layout.addWidget(update_data, 0, 2)
-        
+        left_top_layout.addWidget(update_data_button, 0, 2)
         left_top_layout.addWidget(loan_amount_label, 1, 0)
         left_top_layout.addWidget(loan_amount_text, 2, 0)
-        left_top_layout.addWidget(balance_label, 3, 0)
-        left_top_layout.addWidget(balance_text, 4, 0)
-        left_top_layout.addWidget(value_label, 3, 1)
-        left_top_layout.addWidget(value_text, 4, 1)
-        left_top_layout.addWidget(diff_label, 3, 2)
-        left_top_layout.addWidget(diff_text, 4, 2)
+        left_top_layout.addWidget(loan_years_label, 1, 1 )
+        left_top_layout.addWidget(loan_years_text, 2, 1)
+        left_top_layout.addWidget(interest_rate_label, 1, 2)
+        left_top_layout.addWidget(interest_rate_text, 2, 2)
+        left_top_layout.addWidget(balance_label, 1, 3)
+        left_top_layout.addWidget(balance_text, 2, 3)
+        left_top_layout.addWidget(value_label, 3, 0)
+        left_top_layout.addWidget(value_text, 4, 0)
+        left_top_layout.addWidget(diff_label, 3, 1)
+        left_top_layout.addWidget(diff_text, 4, 1)
+        left_top_layout.addWidget(total_principle_label, 3, 2)
+        left_top_layout.addWidget(total_principle_text, 4, 2)
+        left_top_layout.addWidget(total_interest_label, 3, 3)
+        left_top_layout.addWidget(total_interest_text, 4, 3)
                
         left_bottom_layout.addWidget(add_row)
         left_bottom_layout.addWidget(del_row)
@@ -272,8 +302,6 @@ class Mortgage(qtw.QWidget):
         left_layout.addLayout(left_top_layout)
         left_layout.addWidget(self.table_view)
         left_layout.addLayout(left_bottom_layout)
-        
-
 
         # Set up the graph area on the left using pyqtgrapgh's Docks
         area = DockArea()
@@ -291,13 +319,11 @@ class Mortgage(qtw.QWidget):
         self.graphWidget.setLabel('left', 'Current Balance')
         self.graphWidget.setLabel('bottom', 'Number of Payments')
         self.graphWidget.setXRange(0, 360, padding=0)
-        self.graphWidget.setYRange(0, 500000, padding=0)
+        self.graphWidget.setYRange(0, loan_amount, padding=0)
         
         self.graphWidget.plot(balance, pen=pen1)
         self.graphWidget.plot(amortization, pen=pen2)
 
-
-        
         window = pg.PlotWidget()
         x = np.arange(1)
         y1 = loan_amount
@@ -335,9 +361,9 @@ class Mortgage(qtw.QWidget):
         arrow3 = pg.ArrowItem(pos=(0.25, y3), angle=-90)
         window.addItem(arrow3)
         
-        text_bg4 = pg.TextItem("Total Interest on Loan\n$ " +
+        text_bg4 = pg.TextItem("Total Interest on\n life of the Loan\n$ " +
                 str(total_interest_loan), border='w', color='w',
-                fill=('#873f0c'), anchor=(-1.25,1.5))
+                fill=('#873f0c'), anchor=(-1.9,1.35))
         window.addItem(text_bg4)
         text_bg4.setPos(-.25, y4)
         arrow4 = pg.ArrowItem(pos=(0.75, y4), angle=-135)
@@ -381,6 +407,9 @@ class Mortgage(qtw.QWidget):
         self.model.setHeaderData(self.model.fieldIndex('Escrow'), qtc.Qt.Horizontal, " Escrow ")
         self.model.setHeaderData(self.model.fieldIndex('Balance'), qtc.Qt.Horizontal, " Balance ")
         
+    def updateData(self):
+        pass
+
     def addRow(self):
         """
         Add a new record to the last row of the table
@@ -398,7 +427,9 @@ class Mortgage(qtw.QWidget):
         self.model.select()
         
     def totals(self):
-        
+        """
+        Populate the totals pop-up window when the button is pushed
+        """
         total_additional = 0
         query = QSqlQuery("SELECT Additional_Payment FROM mortgage")
         while query.next():
