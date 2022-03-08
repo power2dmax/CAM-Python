@@ -30,7 +30,7 @@ Simply run the program.
 
 Development:
 ===========
-The Finacaial Tracking program has the following features:
+The Financial Tracking program has the following features:
 
 Still in development
 
