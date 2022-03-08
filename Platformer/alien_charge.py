@@ -226,6 +226,8 @@ def main():
     font = pygame.font.SysFont(None, 28)
 
     pygame.display.set_caption("Alien Charge")
+    programIcon = pygame.image.load('icons/cam_3.png')
+    pygame.display.set_icon(programIcon)
     click_sound = pygame.mixer.Sound('sounds/laser5.ogg')
     clouds = pygame.image.load('images/cloud.png')
     ground = pygame.image.load('images/ground.png')
@@ -252,7 +254,7 @@ def main():
     # List of each block in the game
     block_list = pygame.sprite.Group()
 
-    for i in range(25):
+    for i in range(15):
         # This represents a block
         block = Block()
 
