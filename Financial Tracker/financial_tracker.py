@@ -272,6 +272,7 @@ class Mortgage(qtw.QWidget):
         update_data_button.setIcon(qtg.QIcon("icons/update.png"))
         update_data_button.setStyleSheet("padding: 6px")
         update_data_button.clicked.connect(self.updateData)
+        #payment_calc.triggered.connect(self.payCalc)
 
         left_top_layout.addWidget(title, 0, 0)
         left_top_layout.addWidget(update_data_button, 0, 2)
@@ -390,7 +391,6 @@ class Mortgage(qtw.QWidget):
             'Are you sure you want to delete?',
             qtw.QMessageBox.Yes | qtw.QMessageBox.No)
         if message == qtw.QMessageBox.Yes:
-            #self.database.close()
             self.deleteRow()
         
     def createTable(self):
@@ -407,9 +407,6 @@ class Mortgage(qtw.QWidget):
         self.model.setHeaderData(self.model.fieldIndex('Escrow'), qtc.Qt.Horizontal, " Escrow ")
         self.model.setHeaderData(self.model.fieldIndex('Balance'), qtc.Qt.Horizontal, " Balance ")
         
-    def updateData(self):
-        pass
-
     def addRow(self):
         """
         Add a new record to the last row of the table
@@ -458,6 +455,47 @@ class Mortgage(qtw.QWidget):
             '\nThe Total Principle Paid is: $ ' + totalPrinciple +
             '\nThe Total in Interest Paid is: $ ' + totalInterest +
             '\nThe Total in Escrow Paid is: $ ' + totalEscrow)
+        
+    def updateData(self):
+        update = MortgageUpdates(self)
+        update.resize(350, 350)
+        update.show()
+        
+        
+class MortgageUpdates(qtw.QDialog):
+                
+    def __init__(self, parent):
+        super().__init__(parent)
+        
+        self.setWindowTitle('Update data')
+        self.createTable()
+        
+        layout = qtw.QHBoxLayout()
+        self.setLayout(layout) 
+        
+        self.table_view = qtw.QTableView()
+        header = self.table_view.horizontalHeader()
+        header.setSectionResizeMode(qtw.QHeaderView.ResizeToContents)
+        self.table_view.setModel(self.model)
+        header.setStretchLastSection(True)
+        #self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
+        #self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows + qtw.QTableView.SelectColumns)
+                
+        # Populate the model with data
+        self.model.select()
+        
+        layout.addWidget(self.table_view)
+    
+    
+    def createTable(self):
+        """
+        Set up the model, headers and populate the model.
+        """
+        self.model = qts.QSqlRelationalTableModel()
+        self.model.setTable('loan_data')
+        self.model.setHeaderData(self.model.fieldIndex('loan_amount'), qtc.Qt.Horizontal, "Loan Amount")
+        self.model.setHeaderData(self.model.fieldIndex('loan_years'), qtc.Qt.Horizontal, "Loan Years")
+        self.model.setHeaderData(self.model.fieldIndex('interest_rate'), qtc.Qt.Horizontal, "Interest Rate")
 
 
 if __name__ == '__main__':
