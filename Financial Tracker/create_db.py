@@ -21,23 +21,23 @@ class FinacialData:
     #query.exec_("DROP TABLE checking")
     #query.exec_("DROP TABLE savings")
     #query.exec_("DROP TABLE retirement")
-    #query.exec_("DROP TABLE mortgage")
+    query.exec_("DROP TABLE mortgage")
     #query.exec_("DROP TABLE amortization")
-    query.exec_("DROP TABLE loan_data")
+    #query.exec_("DROP TABLE loan_data")
     
     # Create mortgage table
-    #query.exec_("""CREATE TABLE mortgage (
-    #            Date INTEGER NOT NULL,
-    #            Payment INTEGER NOT NULL,
-    #            Additional_Payment INTEGER NOT NULL,
-    #            Principle INTEGER NOT NULL,
-    #            Interest INTEGER NOT NULL,
-    #            Escrow INTEGER NOT NULL,
-    #            Balance INTEGER NOT NULL)""")
+    query.exec_("""CREATE TABLE mortgage (
+                Date INTEGER NOT NULL,
+                Payment INTEGER NOT NULL,
+                Additional_Payment INTEGER NOT NULL,
+                Principle INTEGER NOT NULL,
+                Interest INTEGER NOT NULL,
+                Escrow INTEGER NOT NULL,
+                Balance INTEGER NOT NULL)""")
     
     # Create amortization table
-    #query.exec_("""CREATE TABLE amortization (
-    #            Principle INTEGER NOT NULL)""")
+    query.exec_("""CREATE TABLE amortization (
+                Principle INTEGER NOT NULL)""")
     
     # Create loan data table
     query.exec_("""CREATE TABLE loan_data (

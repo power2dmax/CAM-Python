@@ -19,7 +19,7 @@ from pyqtgraph.dockarea import *
 
 class DateDelegate(qtw.QStyledItemDelegate):
 
-    def createEditor(self, parent, proxyModelIndex):
+    def createEditor(self, parent, proxyModelIndex, object):
         date_inp = qtw.QDateEdit(parent, calendarPopup=True)
         d = qtc.QDate.currentDate()
         date_inp.setDate(d)
@@ -240,9 +240,9 @@ class Mortgage(qtw.QWidget):
         header = self.table_view.horizontalHeader()
         header.setSectionResizeMode(qtw.QHeaderView.ResizeToContents)
         self.table_view.setModel(self.model)
-        #header.setStretchLastSection(True)
-        #self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
-        self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows + qtw.QTableView.SelectColumns)
+        header.setStretchLastSection(True)
+        self.table_view.setSelectionMode(qtw.QTableView.SingleSelection)
+        #self.table_view.setSelectionBehavior(qtw.QTableView.SelectRows + qtw.QTableView.SelectColumns)
         
         # Using a custom delegate
         self.dateDelegate = DateDelegate()
@@ -399,6 +399,7 @@ class Mortgage(qtw.QWidget):
         """
         self.model = qts.QSqlRelationalTableModel()
         self.model.setTable('mortgage')
+        self.model.setHeaderData(self.model.fieldIndex('id'), qtc.Qt.Horizontal, "ID")
         self.model.setHeaderData(self.model.fieldIndex('Date'), qtc.Qt.Horizontal, " Date ")
         self.model.setHeaderData(self.model.fieldIndex('Payment'), qtc.Qt.Horizontal, " Payment ")
         self.model.setHeaderData(self.model.fieldIndex('Additional_Payment'), qtc.Qt.Horizontal, " Additional ")
@@ -406,6 +407,7 @@ class Mortgage(qtw.QWidget):
         self.model.setHeaderData(self.model.fieldIndex('Interest'), qtc.Qt.Horizontal, " Interest ")
         self.model.setHeaderData(self.model.fieldIndex('Escrow'), qtc.Qt.Horizontal, " Escrow ")
         self.model.setHeaderData(self.model.fieldIndex('Balance'), qtc.Qt.Horizontal, " Balance ")
+        self.model.select()
         
     def addRow(self):
         """
@@ -499,7 +501,7 @@ class MortgageUpdates(qtw.QDialog):
 
 
 if __name__ == '__main__':
-    app = qtw.QApplication(sys.argv)
+    app = qtw.QApplication([])
     windows_style = qtw.QStyleFactory.create('Windows')
     app.setStyle(windows_style)
     window = App()
