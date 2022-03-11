@@ -249,9 +249,6 @@ class Mortgage(qtw.QWidget):
         self.table_view.setItemDelegateForColumn(
             self.model.fieldIndex('Date'),
             self.dateDelegate)
-                
-        # Populate the model with data
-        self.model.select()
         
         add_row = qtw.QPushButton("Add Row")
         add_row.setIcon(qtg.QIcon("icons/add_row.png"))
@@ -505,4 +502,4 @@ if __name__ == '__main__':
     windows_style = qtw.QStyleFactory.create('Windows')
     app.setStyle(windows_style)
     window = App()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
