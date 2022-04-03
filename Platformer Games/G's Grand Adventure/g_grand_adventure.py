@@ -13,16 +13,16 @@ SCREEN_TITLE = "10 Multiple Levels"
 
 # Constants used to scaler the sprites from their orginal size
 
-TILE_SCALING = 0.5 # if the sprite is 128x128 then both height and width will be scaled to 64x64
+TILE_SCALING = 0.40 # if the sprite is 128x128 then the sprite will be scaled by the percentage
 CHARACTER_SCALING = TILE_SCALING * 2
 COIN_SCALING = 0.5
 SPRITE_PIXEL_SIZE = 128
 GRID_PIXEL_SIZE = SPRITE_PIXEL_SIZE * TILE_SCALING
 
 # Movement speed of player, in pixel per frame
-PLAYER_MOVEMENT_SPEED = 8
+PLAYER_MOVEMENT_SPEED = 5
 GRAVITY = 1
-PLAYER_JUMP_SPEED = 25
+PLAYER_JUMP_SPEED = 18
 
 # Player starting posistion
 PLAYER_START_X = SPRITE_PIXEL_SIZE * TILE_SCALING * 2
@@ -159,34 +159,17 @@ class MyGame(arcade.Window):
         self.down_pressed = False
         self.jump_needs_reset = False
         
-        # The lists that keep track of the Sprite. Each Sprite per list
-        self.scene = None
-        
-        # Create a seperate variable that holds the player Sprite
-        self.player_sprite = None
-        
-        # The physics engine
-        self.physics_engine = None
-        
-        # Add a camera for screen scrolling
-        self.camera = None
-        
-        # A camera that can be used to draw GUI elements
-        self.gui_camera = None
-        
-        # Keep track of the score
-        self.score = 0
-        
-        # Where is the right edge of the map?
-        self.end_of_map = 0
-        
-        # Level
-        self.level = 1
-        
-        # Keep track of the score
-        self.score = 0
+        self.scene = None # The lists that keep track of the Sprite. Each Sprite per list
+        self.player_sprite = None # Create a seperate variable that holds the player Sprite
+        self.physics_engine = None # The physics engine
+        self.camera = None # Add a camera for screen scrolling
+        self.gui_camera = None # Add a camera that can be used to draw GUI elements in a stationary position
+        self.score = 0 # Used to create and track the score
+        self.end_of_map = 0 # Used to determine where is the right edge of the map
+        self.level = 1 # Setup the levels, starting with level 1
+        self.score = 0 # Setup the score tracking
                 
-        # Load sounds
+        # Load the various sounds
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
         self.game_over = arcade.load_sound(":resources:sounds/gameover1.wav")
@@ -423,7 +406,6 @@ class MyGame(arcade.Window):
             else:
                 # Load the next level
                 self.setup()
-
                
     
 def main():
