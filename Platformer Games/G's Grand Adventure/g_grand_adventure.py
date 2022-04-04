@@ -1,15 +1,18 @@
-# 12_character_annimation.py
+# g_grand_adventure.py
 
 """
-Basis for the platformer game built on Arcade
+
+Platformer game built on Arcade
+
 """
 import arcade
-import os
+import arcade.gui
+import os, sys
 
 # Constants
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 750
-SCREEN_TITLE = "10 Multiple Levels"
+SCREEN_TITLE = "G's Grand Adventure"
 
 # Constants used to scaler the sprites from their orginal size
 
@@ -49,6 +52,36 @@ def load_texture_pair(filename):
     """
     return [arcade.load_texture(filename),
         arcade.load_texture(filename, flipped_horizontally=True)]
+
+class MyWindow(arcade.Window):
+
+    def __init__(self):
+        super().__init__(800, 600, "OKMessageBox Example", resizable=True)
+        arcade.set_background_color(arcade.color.COOL_GREY)
+
+        # Create and enable the UIManager
+        self.manager = arcade.gui.UIManager()
+        self.manager.enable()
+
+        # Create a box group to align the 'open' button in the center
+        self.v_box = arcade.gui.UIBoxLayout()
+
+        # Create a button. We'll click on this to open our window.
+        # Add it v_box for positioning.
+        open_message_box_button = arcade.gui.UIFlatButton(text="Game Over", width=200)
+        self.v_box.add(open_message_box_button)
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box)
+        )
+
+    def on_draw(self):
+        self.clear()
+        self.manager.draw()
 
 
 class PlayerCharacter(arcade.Sprite):
@@ -138,7 +171,7 @@ class PlayerCharacter(arcade.Sprite):
             self.character_face_direction
         ]
 
-class MyGame(arcade.Window):
+class MyGame(arcade.Window, arcade.View):
     """
     Main application class
     """
@@ -173,6 +206,8 @@ class MyGame(arcade.Window):
         self.collect_coin_sound = arcade.load_sound(":resources:sounds/coin1.wav")
         self.jump_sound = arcade.load_sound(":resources:sounds/jump1.wav")
         self.game_over = arcade.load_sound(":resources:sounds/gameover1.wav")
+        
+
         
         arcade.set_background_color(arcade.csscolor.CORNFLOWER_BLUE)
         
@@ -235,17 +270,10 @@ class MyGame(arcade.Window):
     def on_draw(self):
         # Render the screen
         
-        # Clear the screen to the background color
-        self.clear()
-        
-        # Activate the camera
-        self.camera.use()
-        
-        # Draw the Sprites
-        self.scene.draw()
-        
-        # Activate then GUI camera before drawing the GUI elements
-        self.gui_camera.use()
+        self.clear() # Clear the screen to the background color
+        self.camera.use() # Activate the camera
+        self.scene.draw() # Draw the Sprites
+        self.gui_camera.use() # Activate then GUI camera before drawing the GUI elements
         
         # Draw the game title
         game_title = f"G's Grand Adventure"
@@ -367,12 +395,9 @@ class MyGame(arcade.Window):
 
         # Loop through each coin we hit (if any) and remove it
         for coin in coin_hit_list:
-            # Remove the coin
-            coin.remove_from_sprite_lists()
-            # Play a sound
-            arcade.play_sound(self.collect_coin_sound)
-            # Add on to the score
-            self.score += 1
+            coin.remove_from_sprite_lists() # Remove the coin
+            arcade.play_sound(self.collect_coin_sound) # Play a sound
+            self.score += 1 # Add on to the score
 
         # Position the camera
         self.center_camera_to_player()
@@ -401,8 +426,13 @@ class MyGame(arcade.Window):
             # Advance to the next level
             self.level += 1
             
-            if self.level == 4:
-                arcade.close_window()
+            if self.level == 2:
+                window = MyWindow()
+                
+                #arcade.run()
+                #arcade.pause(5)
+                #arcade.close_window()
+                
             else:
                 # Load the next level
                 self.setup()
@@ -410,6 +440,7 @@ class MyGame(arcade.Window):
     
 def main():
     """ Main function"""
+    
     window = MyGame()
     window.setup()
     arcade.run()
