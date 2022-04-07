@@ -16,6 +16,8 @@ CarLog / car_log.py - This program will allow the user to track maintenance and 
 and calculating a car loan based on purchase price, years, and interest rate. This program utilizes the 
 Python modules; PyQt5, SQLite, and matplotlib.
 
-FinancialTracker / financial_tracker.py - This program will alow the user to track their check, savings, and retirement accounts,
+Financial Tracker / financial_tracker.py - This program will alow the user to track their check, savings, and retirement accounts,
 while keeping an eye on the progress of their mortgage. This program utilizes the Python modules; PyQt5, SQLite,
 and pyqtgrapgh
+
+Platformer Games is a directory with samples of Platformer style games written in Python while using the PyGame or Arcade module
