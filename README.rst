@@ -1,10 +1,11 @@
 =================
-**CAM-Python**
+**CAM's Projects**
 =================
 
 Purpose
 =================
-CAM's repository for sample Python projects. The repository will showcase 
+CAM's repository for sample coding projects through various platforms 
+such as Python, PyQt5, SQLite, and Arcade. This repository will showcase 
 programing skills learned through self teaching. The repository 
 will house various programs written in Python along with various modules
 in suppport of making the program user friendly and functional.
