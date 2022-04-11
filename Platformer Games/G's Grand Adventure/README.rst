@@ -10,7 +10,8 @@ CAM
 
 About:
 ==========
-Simple platformer game using arcade
+Simple platformer game using the arcade library
+Multi-level game with animation as the main character collects coins, while avoiding dangers
 
 Usage:
 ==========
@@ -26,4 +27,4 @@ None
 
 Screen Shots:
 ==========
-.. image:: screen_shot_01.png
+.. image:: screenshot_01.png
