@@ -1,5 +1,5 @@
 ==========
-alien_charge.py
+gs_grand_adventure.py
 ==========
 
 
@@ -10,7 +10,7 @@ CAM
 
 About:
 ==========
-Simple platformer game using pygame
+Simple platformer game using arcade
 
 Usage:
 ==========
@@ -26,4 +26,4 @@ None
 
 Screen Shots:
 ==========
-.. image:: screenshot_01.png
+.. image:: screen_shot_01.png
