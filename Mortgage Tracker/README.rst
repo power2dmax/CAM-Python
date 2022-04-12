@@ -27,7 +27,10 @@ Several files support the mortgage_tracker program
 Usage:
 ==========
 Run the program. Every month that the user pays their mortgage, they can track thier progress
-in the tracker. 
+in the tracker. The program has many featurs to include; tracking the original balance of the loan, 
+the current loan balance, the total principle paid, and the totla interest paid. The data is also presented
+is graphical form, such as a line chart showing the mortgage balance over time and bar graphs for comparision
+of the important items such as the loan amount versus the total interest paid to dat.
 
 Development:
 ===========
