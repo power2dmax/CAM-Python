@@ -19,9 +19,9 @@ Simply run the program.
 
 Development:
 ===========
-Program is written in Python  .. _Python: https://www.python.org/
+Program is written in Python  https://www.python.org/
 
-Sprites come from Kenny.io
+Sprites come from Kenny  https://www.kenney.nl/
 
 Physics engine and platfrom framework from Arcade
 
