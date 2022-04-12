@@ -1,10 +1,10 @@
-# financial_tracker.py
+# mortgage_tracker.py
 """
-Fincancial tracker; multiple tabs that allwos the user to track their various
+Mortgage tracker; multiple tabs that allows the user to track their various
 accounts. Development will focus on one area at a time and build out the
-functioanlity. Develpment is as follows:
+functianality. Development is as follows:
  - Mortgage Tracking - Allows the user to track their mortgage. Total loan amount,
- total princple paid to date, total interest paid to date.
+ total principle paid to date, total interest paid to date.
 """
 import sys
 import numpy as np

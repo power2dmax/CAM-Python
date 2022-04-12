@@ -19,7 +19,11 @@ Simply run the program.
 
 Development:
 ===========
-None
+Program is written in Python  .. _Python: https://www.python.org/
+Sprites come from Kenny.io
+Physics engine and platfrom framework from Arcade
+Background developed using Tiled
+
 
 Notes:
 ==========
