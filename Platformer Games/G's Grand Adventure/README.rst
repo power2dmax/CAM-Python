@@ -19,14 +19,14 @@ Simply run the program.
 
 Development:
 ===========
-Program is written in Python  https://www.python.org/
-
-Sprites come from Kenny  https://www.kenney.nl/
-
-Physics engine and platfrom framework from Arcade
-
-Background developed using Tiled
-
+Program is written in Python
+    https://www.python.org/
+Sprites come from Kenny
+    https://www.kenney.nl/
+Physics engine and platform framework from Arcade
+    https://api.arcade.academy/en/latest/
+Background developed using Tiled Map Editor
+    https://www.mapeditor.org/
 
 Notes:
 ==========
