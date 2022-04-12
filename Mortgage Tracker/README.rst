@@ -11,7 +11,7 @@ CAM
 About:
 ==========
 UI program written in Python and PyQt5 and uses SQLite for the backend database. 
-The purpose is to create an application to track personal finances
+The purpose is to create an application to track the users mortgage balance
 
 Several files support the mortgage_tracker program
 
