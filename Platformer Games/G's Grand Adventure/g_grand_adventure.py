@@ -53,36 +53,6 @@ def load_texture_pair(filename):
     return [arcade.load_texture(filename),
         arcade.load_texture(filename, flipped_horizontally=True)]
 
-class MyWindow(arcade.Window):
-
-    def __init__(self):
-        super().__init__(800, 600, "OKMessageBox Example", resizable=True)
-        arcade.set_background_color(arcade.color.COOL_GREY)
-
-        # Create and enable the UIManager
-        self.manager = arcade.gui.UIManager()
-        self.manager.enable()
-
-        # Create a box group to align the 'open' button in the center
-        self.v_box = arcade.gui.UIBoxLayout()
-
-        # Create a button. We'll click on this to open our window.
-        # Add it v_box for positioning.
-        open_message_box_button = arcade.gui.UIFlatButton(text="Game Over", width=200)
-        self.v_box.add(open_message_box_button)
-
-        # Create a widget to hold the v_box widget, that will center the buttons
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box)
-        )
-
-    def on_draw(self):
-        self.clear()
-        self.manager.draw()
-
 
 class PlayerCharacter(arcade.Sprite):
     """ Setting up the player sprite"""
@@ -427,11 +397,11 @@ class MyGame(arcade.Window, arcade.View):
             self.level += 1
             
             if self.level == 2:
-                window = MyWindow()
+                game_over_text = "Game Over"
+                arcade.draw_text(game_over_text, 200, 200, arcade.csscolor.WHITE, 44, bold=True)
                 
-                #arcade.run()
-                #arcade.pause(5)
-                #arcade.close_window()
+                arcade.pause(5)
+                arcade.close_window()
                 
             else:
                 # Load the next level
