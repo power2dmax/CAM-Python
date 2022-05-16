@@ -49,7 +49,7 @@ Notes:
 ==========
 None
 
-Screen Shots (Maintenance Log Tab, Gas Log Tab, Maintenance Checklist Tab):
+Screen Shots of the three tabs; (Maintenance Log Tab, Gas Log Tab, Maintenance Checklist Tab):
 ==========
 .. image:: screenshots_01.png
 
