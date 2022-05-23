@@ -45,7 +45,7 @@ class Window(qtw.QMainWindow):
         super().__init__(parent)
         
         self.setWindowTitle("Address Book")
-        self.resize(500, 450)
+        self.resize(475, 550)
         self.centralWidget = qtw.QWidget()
         self.setCentralWidget(self.centralWidget)
         self.layout = qtw.QHBoxLayout()
