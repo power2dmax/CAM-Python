@@ -5,13 +5,9 @@ SQLite as the backend database that stores the user's data
 """
 
 import sys
-from PyQt5.QtWidgets import (QApplication, QStyleFactory, QHBoxLayout, QMainWindow,
-                             QAbstractItemView, QWidget, QPushButton, QTableView,
-                             QVBoxLayout, QDialog, QDialogButtonBox, QFormLayout,
-                             QLineEdit, QMessageBox, QLabel)
-from PyQt5.QtCore import Qt
-from PyQt5.QtSql import QSqlDatabase, QSqlQuery, QSqlTableModel
-
+import PyQt5.QtWidgets as qtw
+import PyQt5.QtCore as qtc
+import PyQt5.QtSql as qts
 
 class Model:
     def __init__(self):
@@ -19,13 +15,13 @@ class Model:
         
     def createModel(self):
         """ Create and set up the model"""
-        tableModel = QSqlTableModel()
+        tableModel = qts.QSqlTableModel()
         tableModel.setTable("contacts")
-        tableModel.setEditStrategy(QSqlTableModel.OnFieldChange)
+        tableModel.setEditStrategy(qts.QSqlTableModel.OnFieldChange)
         tableModel.select()
         headers = ("Last Name", "First Name", "Home Address", "Phone Number",  "email Address")
         for columnIndex, header in enumerate(headers):
-            tableModel.setHeaderData(columnIndex, Qt.Horizontal, header)
+            tableModel.setHeaderData(columnIndex, qtc.Qt.Horizontal, header)
         return tableModel
     
     def addContact(self, data):
@@ -42,7 +38,7 @@ class Model:
         self.model.select()
     
 
-class Window(QMainWindow):
+class Window(qtw.QMainWindow):
     """ Setting up thr Main Window for the address book"""
     def __init__(self, parent=None):
         """ Initializer"""
@@ -50,9 +46,9 @@ class Window(QMainWindow):
         
         self.setWindowTitle("Address Book")
         self.resize(500, 450)
-        self.centralWidget = QWidget()
+        self.centralWidget = qtw.QWidget()
         self.setCentralWidget(self.centralWidget)
-        self.layout = QHBoxLayout()
+        self.layout = qtw.QHBoxLayout()
         self.centralWidget.setLayout(self.layout)
         
         if not self.createConnection("contacts.sqlite"):
@@ -66,28 +62,28 @@ class Window(QMainWindow):
         self.contactsModel = Model()
         
         # Create the table view widget
-        self.table = QTableView()
+        self.table = qtw.QTableView()
         self.table.setModel(self.contactsModel.model)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.table.setSelectionBehavior(qtw.QAbstractItemView.SelectRows)
         self.table.resizeColumnsToContents()
         
-        self.title = QLabel("Address Book")
+        self.title = qtw.QLabel("Address Book")
         
         # Create the buttons
-        self.addButton = QPushButton("Add")
+        self.addButton = qtw.QPushButton("Add")
         self.addButton.clicked.connect(self.openAddDialog)
-        self.deleteButton = QPushButton("Delete")
+        self.deleteButton = qtw.QPushButton("Delete")
         self.deleteButton.clicked.connect(self.deleteContact)
-        self.exitButton = QPushButton("Exit", self)
+        self.exitButton = qtw.QPushButton("Exit", self)
         self.exitButton.clicked.connect(self.close)
         
         # Setup the GUI layout
-        layout = QVBoxLayout()
-        topLayout = QHBoxLayout()
+        layout = qtw.QVBoxLayout()
+        topLayout = qtw.QHBoxLayout()
         topLayout.addWidget(self.title)
         topLayout.addWidget(self.addButton)
         topLayout.addWidget(self.deleteButton)
-        bottomLayout = QHBoxLayout()
+        bottomLayout = qtw.QHBoxLayout()
         topLayout.addStretch()
         bottomLayout.addStretch()
         bottomLayout.addWidget(self.exitButton)
@@ -98,7 +94,7 @@ class Window(QMainWindow):
         
     def openAddDialog(self):
         dialog = AddDialog(self)
-        if dialog.exec() == QDialog.Accepted:
+        if dialog.exec() == qtw.QDialog.Accepted:
             self.contactsModel.addContact(dialog.data)
             self.table.resizeColumnsToContents()
             
@@ -107,7 +103,7 @@ class Window(QMainWindow):
         if row < 0:
             return
         
-        messageBox = QMessageBox.question(self, 'Warning',
+        messageBox = qtw.QMessageBox.question(self, 'Warning',
             'Do you want to delete the current contact?')
         
         if messageBox == QMessageBox.Yes:
@@ -115,7 +111,7 @@ class Window(QMainWindow):
     
     def createContactsTable(self):
         """ Create the contacts table in the database"""
-        createTableQuery = QSqlQuery()
+        createTableQuery = qts.QSqlQuery()
         return createTableQuery.exec_("""CREATE TABLE IF NOT EXISTS contacts(
             name_last VARCHAR(25) NOT NULL,
             name_first VARCHAR(25) NOT NULL,
@@ -125,11 +121,11 @@ class Window(QMainWindow):
 
     def createConnection(self, databaseName):
         """ Create and open a database conmnection"""
-        connection = QSqlDatabase.addDatabase("QSQLITE")
+        connection = qts.QSqlDatabase.addDatabase("QSQLITE")
         connection.setDatabaseName(databaseName)
     
         if not connection.open():
-            QMessage.warning(None, "CAM Contact",
+            qtw.QMessage.warning(None, "CAM Contact",
                 f"Database Error: {connection.lastError().text()}")
             return False
     
@@ -138,30 +134,30 @@ class Window(QMainWindow):
         return True
             
         
-class AddDialog(QDialog):
+class AddDialog(qtw.QDialog):
     """ Pop-up window with dialog for adding the contacts"""
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setWindowTitle("Add a Contact")
-        self.layout = QVBoxLayout()
+        self.layout = qtw.QVBoxLayout()
         self.setLayout(self.layout)
         self.data = None
         
         self.setupUI()
             
     def setupUI(self):
-        self.lastName = QLineEdit()
+        self.lastName = qtw.QLineEdit()
         self.lastName.setObjectName("name_last")
-        self.firstName = QLineEdit()
+        self.firstName = qtw.QLineEdit()
         self.firstName.setObjectName("name_last")
-        self.address = QLineEdit()
+        self.address = qtw.QLineEdit()
         self.address.setObjectName("address")
-        self.phone = QLineEdit()
+        self.phone = qtw.QLineEdit()
         self.phone.setObjectName("phone")
-        self.email = QLineEdit()
+        self.email = qtw.QLineEdit()
         self.email.setObjectName("email")
         
-        layout = QFormLayout()
+        layout = qtw.QFormLayout()
         layout.addRow("Last Name", self.lastName)
         layout.addRow("First Name", self.firstName)
         layout.addRow("Address", self.address)
@@ -169,10 +165,10 @@ class AddDialog(QDialog):
         layout.addRow("email", self.email)
         self.layout.addLayout(layout)
         
-        self.buttonsBox = QDialogButtonBox(self)
-        self.buttonsBox.setOrientation(Qt.Horizontal)
+        self.buttonsBox = qtw.QDialogButtonBox(self)
+        self.buttonsBox.setOrientation(qtc.Qt.Horizontal)
         self.buttonsBox.setStandardButtons(
-            QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+            qtw.QDialogButtonBox.Ok | qtw.QDialogButtonBox.Cancel
             )
         self.buttonsBox.accepted.connect(self.accept)
         self.buttonsBox.rejected.connect(self.reject)
@@ -183,7 +179,7 @@ class AddDialog(QDialog):
         self.data = []
         for field in (self.lastName, self.firstName, self.address, self.phone, self.email):
             if not field.text():
-                QMessageBox.critical(self, "Warning:",
+                qtw.QMessageBox.critical(self, "Warning:",
                     f"You must provide a contact's {field.objectName()}",)
                 self.data = None
                 return
@@ -197,8 +193,8 @@ class AddDialog(QDialog):
 
 
 if __name__=="__main__":
-    app = QApplication(sys.argv)
-    windows_style = QStyleFactory.create('Windows')
+    app = qtw.QApplication(sys.argv)
+    windows_style = qtw.QStyleFactory.create('Windows')
     app.setStyle(windows_style)
     window = Window()
     sys.exit(app.exec_())
