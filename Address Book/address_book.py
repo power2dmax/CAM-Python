@@ -7,9 +7,10 @@ SQLite as the backend database that stores the user's data
 import sys
 import PyQt5.QtWidgets as qtw
 import PyQt5.QtCore as qtc
+from PyQt5 import QtGui as qtg
 import PyQt5.QtSql as qts
 
-class Model:
+class myModel():
     def __init__(self):
         self.model = self.createModel()
         
@@ -19,7 +20,7 @@ class Model:
         tableModel.setTable("contacts")
         tableModel.setEditStrategy(qts.QSqlTableModel.OnFieldChange)
         tableModel.select()
-        headers = ("Last Name", "First Name", "Home Address", "Phone Number",  "email Address")
+        headers = ("ID", "Last Name", "First Name", "Home Address", "Phone Number",  "email Address")
         for columnIndex, header in enumerate(headers):
             tableModel.setHeaderData(columnIndex, qtc.Qt.Horizontal, header)
         return tableModel
@@ -45,13 +46,13 @@ class Window(qtw.QMainWindow):
         super().__init__(parent)
         
         self.setWindowTitle("Address Book")
-        self.resize(475, 550)
+        self.resize(525, 750)
         self.centralWidget = qtw.QWidget()
         self.setCentralWidget(self.centralWidget)
         self.layout = qtw.QHBoxLayout()
         self.centralWidget.setLayout(self.layout)
         
-        if not self.createConnection("contacts.sqlite"):
+        if not self.createConnection("addresses.sqlite"):
             sys.exit(1)
         
         self.setupUI() 
@@ -59,7 +60,7 @@ class Window(qtw.QMainWindow):
         
     def setupUI(self):
         """ Setup the main window's layout and gui """
-        self.contactsModel = Model()
+        self.contactsModel = myModel()
         
         # Create the table view widget
         self.table = qtw.QTableView()
@@ -68,6 +69,7 @@ class Window(qtw.QMainWindow):
         self.table.resizeColumnsToContents()
         
         self.title = qtw.QLabel("Address Book")
+        self.title.setFont(qtg.QFont('Arial', 16))
         
         # Create the buttons
         self.addButton = qtw.QPushButton("Add")
@@ -80,11 +82,11 @@ class Window(qtw.QMainWindow):
         # Setup the GUI layout
         layout = qtw.QVBoxLayout()
         topLayout = qtw.QHBoxLayout()
-        topLayout.addWidget(self.title)
         topLayout.addWidget(self.addButton)
         topLayout.addWidget(self.deleteButton)
         bottomLayout = qtw.QHBoxLayout()
         topLayout.addStretch()
+        bottomLayout.addWidget(self.title)
         bottomLayout.addStretch()
         bottomLayout.addWidget(self.exitButton)
         layout.addLayout(topLayout)
@@ -95,7 +97,7 @@ class Window(qtw.QMainWindow):
     def openAddDialog(self):
         dialog = AddDialog(self)
         if dialog.exec() == qtw.QDialog.Accepted:
-            self.contactsModel.addContact(dialog.data)
+            self.contactsModel.addContact(dialog.items)
             self.table.resizeColumnsToContents()
             
     def deleteContact(self):
@@ -106,13 +108,14 @@ class Window(qtw.QMainWindow):
         messageBox = qtw.QMessageBox.question(self, 'Warning',
             'Do you want to delete the current contact?')
         
-        if messageBox == QMessageBox.Yes:
+        if messageBox == qtw.QMessageBox.Yes:
             self.contactsModel.deleteContact(row)
     
     def createContactsTable(self):
         """ Create the contacts table in the database"""
         createTableQuery = qts.QSqlQuery()
-        return createTableQuery.exec_("""CREATE TABLE IF NOT EXISTS contacts(
+        return createTableQuery.exec_("""CREATE TABLE IF NOT EXISTS addresses(
+            id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL,
             name_last VARCHAR(25) NOT NULL,
             name_first VARCHAR(25) NOT NULL,
             address VARCHAR(35),
@@ -121,12 +124,12 @@ class Window(qtw.QMainWindow):
 
     def createConnection(self, databaseName):
         """ Create and open a database conmnection"""
-        connection = qts.QSqlDatabase.addDatabase("QSQLITE")
-        connection.setDatabaseName(databaseName)
+        database = qts.QSqlDatabase.addDatabase("QSQLITE")
+        database.setDatabaseName(databaseName)
     
-        if not connection.open():
-            qtw.QMessage.warning(None, "CAM Contact",
-                f"Database Error: {connection.lastError().text()}")
+        if not database.open():
+            print("Unable to open data source file.")
+            sys.exit(1) # Error code 1 - signifies error
             return False
     
         self.createContactsTable()
@@ -141,7 +144,7 @@ class AddDialog(qtw.QDialog):
         self.setWindowTitle("Add a Contact")
         self.layout = qtw.QVBoxLayout()
         self.setLayout(self.layout)
-        self.data = None
+        self.items = None
         
         self.setupUI()
             
@@ -156,7 +159,7 @@ class AddDialog(qtw.QDialog):
         self.phone.setObjectName("phone")
         self.email = qtw.QLineEdit()
         self.email.setObjectName("email")
-        
+                
         layout = qtw.QFormLayout()
         layout.addRow("Last Name", self.lastName)
         layout.addRow("First Name", self.firstName)
@@ -165,28 +168,28 @@ class AddDialog(qtw.QDialog):
         layout.addRow("email", self.email)
         self.layout.addLayout(layout)
         
-        self.buttonsBox = qtw.QDialogButtonBox(self)
-        self.buttonsBox.setOrientation(qtc.Qt.Horizontal)
-        self.buttonsBox.setStandardButtons(
+        self.buttons = qtw.QDialogButtonBox(self)
+        self.buttons.setOrientation(qtc.Qt.Horizontal)
+        self.buttons.setStandardButtons(
             qtw.QDialogButtonBox.Ok | qtw.QDialogButtonBox.Cancel
             )
-        self.buttonsBox.accepted.connect(self.accept)
-        self.buttonsBox.rejected.connect(self.reject)
-        self.layout.addWidget(self.buttonsBox)
+        self.buttons.accepted.connect(self.accept)
+        self.buttons.rejected.connect(self.reject)
+        self.layout.addWidget(self.buttons)
         
     def accept(self):
         print("Last Name: ", self.lastName)
-        self.data = []
-        for field in (self.lastName, self.firstName, self.address, self.phone, self.email):
-            if not field.text():
+        self.items = []
+        for data in (self.lastName, self.firstName, self.address, self.phone, self.email):
+            if not data.text():
                 qtw.QMessageBox.critical(self, "Warning:",
                     f"You must provide a contact's {field.objectName()}",)
-                self.data = None
+                self.items = None
                 return
 
-            self.data.append(field.text())
+            self.items.append(data.text())
 
-        if not self.data:
+        if not self.items:
             return
 
         super().accept()
