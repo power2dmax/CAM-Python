@@ -500,6 +500,6 @@ class MortgageUpdates(qtw.QDialog):
 if __name__ == '__main__':
     app = qtw.QApplication([])
     windows_style = qtw.QStyleFactory.create('Windows')
-    app.setStyle(windows_style)
+    app.setStyle('Windows')
     window = App()
     sys.exit(app.exec())
